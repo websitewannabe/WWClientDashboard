@@ -51,7 +51,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
                     "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
                     location === item.path
                       ? "bg-[#FF5722] text-white [&>svg]:text-white"
-                      : "text-[#FF5722] hover:bg-[#8BC34A] hover:text-white [&>svg]:text-[#FF5722] hover:[&>svg]:text-white"
+                      : "text-[#FF5722] hover:bg-white hover:text-black [&>svg]:text-[#FF5722] hover:[&>svg]:text-black"
                   )}
                   onClick={() => setIsSidebarOpen(false)}
                 >
@@ -107,7 +107,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
                 "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
                 location === item.path
                   ? "bg-[#FF5722] text-white [&>svg]:text-white"
-                  : "text-[#FF5722] hover:bg-[#8BC34A] hover:text-white [&>svg]:text-[#FF5722] hover:[&>svg]:text-white"
+                  : "text-[#FF5722] hover:bg-white hover:text-black [&>svg]:text-[#FF5722] hover:[&>svg]:text-black"
               )}
             >
               {item.icon}

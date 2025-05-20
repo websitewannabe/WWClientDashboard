@@ -16,12 +16,12 @@ export function IntercomProvider({ children }: { children: React.ReactNode }) {
     // Load the Intercom script
     const script = document.createElement('script');
     script.async = true;
-    script.src = 'https://widget.intercom.io/widget/' + process.env.INTERCOM_APP_ID;
+    script.src = 'https://widget.intercom.io/widget/' + import.meta.env.INTERCOM_APP_ID;
     document.head.appendChild(script);
 
     // Initialize Intercom
     window.intercomSettings = {
-      app_id: process.env.INTERCOM_APP_ID,
+      app_id: import.meta.env.INTERCOM_APP_ID,
       alignment: 'right',
       horizontal_padding: 20,
       vertical_padding: 20,

@@ -12,6 +12,7 @@ import Settings from "@/pages/settings";
 import Sidebar from "@/components/layout/sidebar";
 import MobileNav from "@/components/layout/mobile-nav";
 import Header from "@/components/layout/header";
+import IntercomProvider from "@/components/intercom/intercom-provider";
 import { useState } from "react";
 
 function Router() {
@@ -48,10 +49,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
+      <IntercomProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </IntercomProvider>
     </QueryClientProvider>
   );
 }

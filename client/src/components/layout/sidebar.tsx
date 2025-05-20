@@ -32,7 +32,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
   // Mobile sidebar using Sheet component
   const mobileSidebar = (
     <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-      <SheetContent side="left" className="bg-primary-900 text-white p-0 w-64">
+      <SheetContent side="left" className="bg-[#FF5722] text-white p-0 w-64">
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-center h-16 border-b border-slate-700 px-4">
             <img 
@@ -89,7 +89,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
 
   // Desktop sidebar
   const desktopSidebar = (
-    <aside className="hidden md:flex md:w-64 flex-col fixed inset-y-0 z-40 bg-primary-900 text-white">
+    <aside className="hidden md:flex md:w-64 flex-col fixed inset-y-0 z-40 bg-[#FF5722] text-white">
       <div className="flex items-center justify-center h-16 border-b border-slate-700 px-4">
         <img 
           src="/assets/images/logo.webp" 
@@ -106,8 +106,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
               className={cn(
                 "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
                 location === item.path
-                  ? "bg-[#FF5722] text-white"
-                  : "text-slate-300 hover:bg-[#8BC34A] hover:text-white"
+                  ? "bg-white text-[#FF5722] font-bold"
+                  : "text-white hover:bg-white/20 hover:text-white"
               )}
             >
               {item.icon}

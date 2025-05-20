@@ -61,18 +61,18 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
               <div className="flex items-center">
                 <Avatar className="h-10 w-10 rounded-full">
                   <AvatarImage 
-                    src={user.profileImageUrl || ""} 
-                    alt={`${user.firstName || ''} ${user.lastName || ''}`} 
+                    src={user?.profileImageUrl || ""} 
+                    alt={`${user?.firstName || ''} ${user?.lastName || ''}`} 
                   />
                   <AvatarFallback>
-                    {user.firstName ? user.firstName.charAt(0) : "U"}
+                    {user?.firstName ? user.firstName.charAt(0) : "U"}
                   </AvatarFallback>
                 </Avatar>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-white">
-                    {user.firstName} {user.lastName}
+                    {user?.firstName || ''} {user?.lastName || ''}
                   </p>
-                  <p className="text-xs text-slate-300">{user.email}</p>
+                  <p className="text-xs text-slate-300">{user?.email || ''}</p>
                 </div>
               </div>
             </div>
@@ -112,18 +112,18 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           <div className="flex items-center">
             <Avatar className="h-10 w-10 rounded-full">
               <AvatarImage 
-                src={user.profileImageUrl || ""} 
-                alt={`${user.firstName || ''} ${user.lastName || ''}`} 
+                src={user?.profileImageUrl || ""} 
+                alt={`${user?.firstName || ''} ${user?.lastName || ''}`} 
               />
               <AvatarFallback>
-                {user.firstName ? user.firstName.charAt(0) : "U"}
+                {user?.firstName ? user.firstName.charAt(0) : "U"}
               </AvatarFallback>
             </Avatar>
             <div className="ml-3">
               <p className="text-sm font-medium text-white">
-                {user.firstName} {user.lastName}
+                {user?.firstName || ''} {user?.lastName || ''}
               </p>
-              <p className="text-xs text-slate-300">{user.email}</p>
+              <p className="text-xs text-slate-300">{user?.email || ''}</p>
             </div>
           </div>
         </div>

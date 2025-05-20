@@ -10,6 +10,7 @@ import {
   HeadphonesIcon, 
   Settings
 } from "lucide-react";
+import type { User } from "@shared/schema";
 
 interface SidebarProps {
   isSidebarOpen: boolean;

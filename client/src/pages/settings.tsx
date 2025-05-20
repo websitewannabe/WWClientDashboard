@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/use-auth";
 import { useState } from "react";
 import { LogOut, Save, User } from "lucide-react";
+import type { User as UserType } from "@shared/schema";
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("profile");

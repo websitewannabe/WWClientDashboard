@@ -63,10 +63,10 @@ export default function Header({ toggleSidebar }: HeaderProps) {
           )}
           {!isAuthenticated && (
             <Button 
-              variant="outline" 
+              variant="default" 
               size="sm" 
               onClick={() => window.location.href = "/api/login"}
-              className="hidden md:inline-flex"
+              className="hidden md:inline-flex bg-[#8BC34A] hover:bg-[#71a436] text-white"
             >
               Log in
             </Button>

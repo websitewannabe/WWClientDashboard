@@ -56,22 +56,25 @@ export class DatabaseStorage implements IStorage {
     const pendingInvoices = await db
       .select()
       .from(invoices)
-      .where(eq(invoices.userId, userId))
-      .where(eq(invoices.status, 'pending'));
+      .where(
+        eq(invoices.userId, userId) && eq(invoices.status, 'pending')
+      );
     
     // Get the count of open tickets
     const openTickets = await db
       .select()
       .from(tickets)
-      .where(eq(tickets.userId, userId))
-      .where(eq(tickets.status, 'open'));
+      .where(
+        eq(tickets.userId, userId) && eq(tickets.status, 'open')
+      );
 
     // Next payment date from pending invoices
     let nextPayment = "";
     if (pendingInvoices.length > 0) {
       // Find the earliest due date from pending invoices
-      const sortedInvoices = [...pendingInvoices].sort((a, b) => {
-        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+      const sortedInvoices = [...pendingInvoices].filter(invoice => invoice.dueDate !== null).sort((a, b) => {
+        // TypeScript knows both are non-null now
+        return new Date(a.dueDate as string).getTime() - new Date(b.dueDate as string).getTime();
       });
       if (sortedInvoices[0]?.dueDate) {
         const date = new Date(sortedInvoices[0].dueDate);
@@ -143,8 +146,9 @@ export class DatabaseStorage implements IStorage {
     const [ticket] = await db
       .select()
       .from(tickets)
-      .where(eq(tickets.id, ticketId))
-      .where(eq(tickets.userId, userId));
+      .where(
+        eq(tickets.id, ticketId) && eq(tickets.userId, userId)
+      );
 
     if (!ticket) {
       throw new Error('Ticket not found');

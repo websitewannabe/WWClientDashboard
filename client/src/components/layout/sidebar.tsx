@@ -34,8 +34,12 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
       <SheetContent side="left" className="bg-primary-900 text-white p-0 w-64">
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-center h-16 border-b border-slate-700">
-            <h1 className="text-xl font-bold">Client Portal</h1>
+          <div className="flex items-center justify-center h-16 border-b border-slate-700 px-4">
+            <img 
+              src="/assets/images/logo-horizontal.svg" 
+              alt="Website Wannabe" 
+              className="h-10" 
+            />
           </div>
           <div className="flex-1 overflow-y-auto py-4">
             <nav className="px-2 space-y-1">

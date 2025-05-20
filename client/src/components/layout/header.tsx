@@ -56,8 +56,8 @@ export default function Header({ toggleSidebar }: HeaderProps) {
           {isAuthenticated && user && (
             <div className="relative hidden md:block">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={user.profileImageUrl || ""} alt={`${user.firstName || ''} ${user.lastName || ''}`} />
-                <AvatarFallback>{user.firstName ? user.firstName.charAt(0) : "U"}</AvatarFallback>
+                <AvatarImage src={user?.profileImageUrl || ""} alt={`${user?.firstName || ''} ${user?.lastName || ''}`} />
+                <AvatarFallback>{user?.firstName ? user.firstName.charAt(0) : "U"}</AvatarFallback>
               </Avatar>
             </div>
           )}

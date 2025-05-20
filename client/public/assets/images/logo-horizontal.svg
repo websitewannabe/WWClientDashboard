@@ -1,0 +1,10 @@
+<svg width="250" height="50" viewBox="0 0 250 50" xmlns="http://www.w3.org/2000/svg">
+  <!-- Frog eyes logo with improved detail -->
+  <ellipse cx="26" cy="22" rx="12" ry="10" fill="#8bc34a" stroke="#006400" stroke-width="1"/>
+  <circle cx="26" cy="22" r="7" fill="#8bc34a" stroke="#006400" stroke-width="1"/>
+  <circle cx="26" cy="22" r="3" fill="#ff5722"/>
+  
+  <!-- Text part of the logo -->
+  <text x="45" y="28" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#ff5722">WEBSITE</text>
+  <text x="145" y="28" font-family="Arial, sans-serif" font-size="16" fill="#888888">WANNABE</text>
+</svg>

@@ -36,7 +36,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-center h-16 border-b border-slate-700 px-4">
             <img 
-              src="/assets/images/company-logo.png" 
+              src="/assets/images/logo.webp" 
               alt="Company Logo" 
               className="h-10" 
             />
@@ -92,7 +92,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     <aside className="hidden md:flex md:w-64 flex-col fixed inset-y-0 z-40 bg-primary-900 text-white">
       <div className="flex items-center justify-center h-16 border-b border-slate-700 px-4">
         <img 
-          src="/assets/images/company-logo.png" 
+          src="/assets/images/logo.webp" 
           alt="Company Logo" 
           className="h-10" 
         />

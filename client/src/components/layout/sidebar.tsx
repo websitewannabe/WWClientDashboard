@@ -50,8 +50,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
                   className={cn(
                     "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
                     location === item.path
-                      ? "bg-slate-800 text-white"
-                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                      ? "bg-[#FF5722] text-white"
+                      : "text-slate-300 hover:bg-[#8BC34A] hover:text-white"
                   )}
                   onClick={() => setIsSidebarOpen(false)}
                 >
@@ -90,8 +90,12 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
   // Desktop sidebar
   const desktopSidebar = (
     <aside className="hidden md:flex md:w-64 flex-col fixed inset-y-0 z-40 bg-primary-900 text-white">
-      <div className="flex items-center justify-center h-16 border-b border-slate-700">
-        <h1 className="text-xl font-bold">Client Portal</h1>
+      <div className="flex items-center justify-center h-16 border-b border-slate-700 px-4">
+        <img 
+          src="/assets/images/logo-horizontal.svg" 
+          alt="Website Wannabe" 
+          className="h-10" 
+        />
       </div>
       <div className="flex-1 overflow-y-auto py-4">
         <nav className="px-2 space-y-1">
@@ -102,8 +106,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
               className={cn(
                 "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
                 location === item.path
-                  ? "bg-slate-800 text-white"
-                  : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                  ? "bg-[#FF5722] text-white"
+                  : "text-slate-300 hover:bg-[#8BC34A] hover:text-white"
               )}
             >
               {item.icon}

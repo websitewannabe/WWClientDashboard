@@ -39,19 +39,19 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           <div className="flex-1 overflow-y-auto py-4">
             <nav className="px-2 space-y-1">
               {navItems.map((item) => (
-                <Link key={item.path} href={item.path}>
-                  <a
-                    className={cn(
-                      "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
-                      location === item.path
-                        ? "bg-slate-800 text-white"
-                        : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                    )}
-                    onClick={() => setIsSidebarOpen(false)}
-                  >
-                    {item.icon}
-                    {item.label}
-                  </a>
+                <Link 
+                  key={item.path} 
+                  href={item.path}
+                  className={cn(
+                    "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
+                    location === item.path
+                      ? "bg-slate-800 text-white"
+                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                  )}
+                  onClick={() => setIsSidebarOpen(false)}
+                >
+                  {item.icon}
+                  {item.label}
                 </Link>
               ))}
             </nav>
@@ -91,18 +91,18 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
       <div className="flex-1 overflow-y-auto py-4">
         <nav className="px-2 space-y-1">
           {navItems.map((item) => (
-            <Link key={item.path} href={item.path}>
-              <a
-                className={cn(
-                  "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
-                  location === item.path
-                    ? "bg-slate-800 text-white"
-                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                )}
-              >
-                {item.icon}
-                {item.label}
-              </a>
+            <Link 
+              key={item.path} 
+              href={item.path}
+              className={cn(
+                "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
+                location === item.path
+                  ? "bg-slate-800 text-white"
+                  : "text-slate-300 hover:bg-slate-800 hover:text-white"
+              )}
+            >
+              {item.icon}
+              {item.label}
             </Link>
           ))}
         </nav>

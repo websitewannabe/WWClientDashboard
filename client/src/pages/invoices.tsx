@@ -162,6 +162,25 @@ export default function Invoices() {
         <div className="px-5 py-4 border-b border-slate-200">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-lg font-medium leading-6 text-slate-900">All Invoices</h3>
+            <div className="relative w-64">
+              <input
+                type="text"
+                placeholder="Search invoices..."
+                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              {searchTerm && (
+                <button 
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  onClick={() => setSearchTerm("")}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
             <div className="flex space-x-3">
               <Button 
                 variant="outline" 
@@ -226,7 +245,7 @@ export default function Invoices() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-200">
-                {filteredInvoices.map((invoice) => (
+                {searchFilteredInvoices.map((invoice) => (
                   <tr key={invoice.id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
                       {invoice.invoiceNumber}
@@ -282,7 +301,7 @@ export default function Invoices() {
         <div className="bg-slate-50 px-5 py-3">
           <div className="flex items-center justify-between">
             <div className="text-sm text-slate-700">
-              Showing {filteredInvoices.length} of {displayInvoices.length} invoices
+              Showing {searchFilteredInvoices.length} of {displayInvoices.length} invoices
             </div>
             <div className="flex space-x-2">
               <Button variant="outline" size="sm" disabled>

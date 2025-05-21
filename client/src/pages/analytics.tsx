@@ -2,8 +2,8 @@ import PageHeader from "@/components/layout/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ArrowDownIcon, ArrowUpIcon, Calendar } from "lucide-react";
-import { useState } from "react";
+import { ArrowDownIcon, ArrowUpIcon, Calendar, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
 import { 
   AreaChart, 
   Area, 
@@ -23,6 +23,8 @@ import {
 } from "recharts";
 import { useAuth } from "@/hooks/use-auth";
 import { formatNumber } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { initGA, trackEvent } from "@/lib/analytics";
 
 // This will be replaced by data from API
 const trafficData = [
@@ -72,9 +74,145 @@ const metricCards = [
 
 const COLORS = ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444'];
 
+// Interface to match the response from our Google Analytics API
+interface AnalyticsData {
+  dates: string[];
+  pageViews: number[];
+  visitors: number[];
+  sessions: number[];
+  totals: {
+    pageViews: number;
+    visitors: number;
+    sessions: number;
+    bounceRate: number;
+    avgSessionDuration: number;
+  };
+}
+
+// Helper to format the analytics data for the chart
+const formatAnalyticsForChart = (data: AnalyticsData) => {
+  return data.dates.map((date, index) => ({
+    date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    pageViews: data.pageViews[index],
+    visitors: data.visitors[index],
+    sessions: data.sessions[index]
+  }));
+};
+
+// Helper to format time in seconds as minutes and seconds
+const formatTime = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}m ${remainingSeconds}s`;
+};
+
 export default function Analytics() {
-  const [timeframe, setTimeframe] = useState("monthly");
-  const { isAuthenticated } = useAuth();
+  const [timeframe, setTimeframe] = useState<string>("last30days");
+  const { isAuthenticated, user } = useAuth();
+  
+  // Initialize Google Analytics on component mount
+  useEffect(() => {
+    initGA();
+    
+    // Track this page view for analytics
+    trackEvent('view_analytics_page', 'client_portal', 'analytics_dashboard');
+  }, []);
+  
+  // Fetch analytics data from our Google Analytics API
+  const { data: analyticsData, isLoading, error } = useQuery({
+    queryKey: ['/api/analytics/ga', timeframe],
+    enabled: isAuthenticated
+  });
+  
+  // Calculate period-over-period changes (simplified simulation for now)
+  const calculateChange = (current: number, previous: number) => {
+    if (!previous) return '0%';
+    const change = ((current - previous) / previous) * 100;
+    return `${change > 0 ? '+' : ''}${change.toFixed(1)}%`;
+  };
+  
+  // Prepare metric cards based on analytics data
+  const getMetricCards = (data: AnalyticsData) => {
+    if (!data) return metricCards;
+    
+    // In a real implementation, you would compare with previous period data
+    // For now, we'll use the demo data change values
+    return [
+      { 
+        name: 'Page Views', 
+        value: data.totals.pageViews, 
+        change: '+12.2%', 
+        changeType: 'positive' 
+      },
+      { 
+        name: 'Unique Visitors', 
+        value: data.totals.visitors, 
+        change: '+8.7%', 
+        changeType: 'positive' 
+      },
+      { 
+        name: 'Avg. Time on Page', 
+        value: formatTime(data.totals.avgSessionDuration), 
+        change: '-3.1%', 
+        changeType: 'negative' 
+      },
+      { 
+        name: 'Bounce Rate', 
+        value: `${data.totals.bounceRate.toFixed(1)}%`, 
+        change: '-1.8%', 
+        changeType: 'positive' 
+      },
+      { 
+        name: 'Pages / Session', 
+        value: (data.totals.pageViews / data.totals.sessions).toFixed(1), 
+        change: '+0.5%', 
+        changeType: 'positive' 
+      },
+      { 
+        name: 'New vs Returning', 
+        value: '68% / 32%', 
+        change: '+2.3%', 
+        changeType: 'positive' 
+      },
+    ];
+  };
+  
+  // Handler for timeframe change
+  const handleTimeframeChange = (value: string) => {
+    setTimeframe(value);
+    trackEvent('change_analytics_timeframe', 'analytics', value);
+  };
+  
+  // If loading, show loading state
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-slate-600">Loading analytics data...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // If error, show error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center max-w-md">
+          <h3 className="text-lg font-semibold text-slate-900 mb-2">Unable to load analytics</h3>
+          <p className="text-slate-600 mb-4">
+            There was a problem loading your analytics data. Please try again later.
+          </p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </div>
+      </div>
+    );
+  }
+  
+  // Use our real data if available, otherwise fall back to demo data
+  const displayData = analyticsData ? formatAnalyticsForChart(analyticsData) : trafficData;
+  const currentMetricCards = analyticsData ? getMetricCards(analyticsData) : metricCards;
   
   return (
     <>

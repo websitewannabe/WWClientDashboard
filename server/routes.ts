@@ -5,6 +5,7 @@ import { setupAuth, isAuthenticated } from "./replitAuth";
 
 import { fetchIntercomTickets, getIntercomTicketById } from "./intercom";
 import { syncIntercomContactsToUsers, importIntercomContactByEmail } from "./intercom-sync";
+import { fetchGoogleAnalyticsData } from "./google-analytics";
 
 export async function registerRoutes(app: Express): Server {
   // Auth middleware
@@ -58,7 +59,7 @@ export async function registerRoutes(app: Express): Server {
     }
   });
 
-  // Analytics data
+  // Analytics data - from database
   app.get("/api/analytics", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
@@ -68,6 +69,21 @@ export async function registerRoutes(app: Express): Server {
     } catch (error) {
       console.error("Error fetching analytics:", error);
       res.status(500).json({ message: "Failed to fetch analytics data" });
+    }
+  });
+
+  // Google Analytics data - from GA
+  app.get("/api/analytics/ga", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const timeframe = req.query.timeframe || 'last30days';
+      
+      // Fetch analytics data from Google Analytics
+      const analytics = await fetchGoogleAnalyticsData(timeframe as string, userId);
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching Google Analytics data:", error);
+      res.status(500).json({ message: "Failed to fetch analytics data from Google Analytics" });
     }
   });
 

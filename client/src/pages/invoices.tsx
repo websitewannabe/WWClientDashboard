@@ -114,7 +114,7 @@ export default function Invoices() {
   });
 
   // Use dummy data until real data is available
-  const displayInvoices: Invoice[] = invoices || invoicesData;
+  const displayInvoices: Invoice[] = (invoices as Invoice[]) || invoicesData;
 
   const filteredInvoices = filter === 'all' 
     ? displayInvoices 
@@ -236,10 +236,15 @@ export default function Invoices() {
                       {getStatusBadge(invoice.status)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <Button variant="ghost" size="sm" className="text-primary-600 hover:text-primary-700">
-                        <Eye className="h-4 w-4 mr-1" />
-                        View
-                      </Button>
+                      <InvoiceDetailModal
+                        invoice={invoice}
+                        trigger={
+                          <Button variant="ghost" size="sm" className="text-primary-600 hover:text-primary-700">
+                            <Eye className="h-4 w-4 mr-1" />
+                            View
+                          </Button>
+                        }
+                      />
                       <InvoicePDFModal
                         invoice={{
                           ...invoice,

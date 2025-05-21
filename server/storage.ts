@@ -96,6 +96,9 @@ export class DatabaseStorage implements IStorage {
     gaMeasurementId?: string;
     gaPropertyId?: string;
     gaViewId?: string;
+    gscSiteUrl?: string;
+    gscVerificationMethod?: string;
+    gscVerified?: string;
   }): Promise<User> {
     const [user] = await db
       .update(users)

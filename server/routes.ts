@@ -234,18 +234,28 @@ export async function registerRoutes(app: Express): Server {
     }
   });
   
-  // Update client Google Analytics settings
+  // Update client Analytics & Search Console settings
   app.patch('/api/admin/clients/:id/analytics', isAuthenticated, async (req: any, res) => {
     try {
       const clientId = req.params.id;
-      const { gaMeasurementId, gaPropertyId, gaViewId } = req.body;
+      const { 
+        gaMeasurementId, 
+        gaPropertyId, 
+        gaViewId,
+        gscSiteUrl,
+        gscVerificationMethod,
+        gscVerified
+      } = req.body;
       
       // In a production app, you'd want to check if the user is an admin
       
       const updatedClient = await storage.updateUserAnalytics(clientId, {
         gaMeasurementId,
         gaPropertyId,
-        gaViewId
+        gaViewId,
+        gscSiteUrl,
+        gscVerificationMethod,
+        gscVerified
       });
       
       res.json(updatedClient);

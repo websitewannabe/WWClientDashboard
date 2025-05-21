@@ -267,6 +267,43 @@ export default function Analytics() {
   const currentMetricCards = analyticsData && typeof analyticsData === 'object' && 'totals' in analyticsData
     ? getMetricCards(analyticsData as AnalyticsData) 
     : metricCards;
+    
+  // For development purposes, let's create mock search console data while the API is being set up
+  // This will be removed once the actual API integration is complete
+  const mockSearchConsoleData: SearchConsoleData = {
+    keywords: [
+      { keyword: "web design", clicks: 345, impressions: 12450, ctr: 0.0277, position: 8.2 },
+      { keyword: "website builder", clicks: 289, impressions: 9870, ctr: 0.0293, position: 9.5 },
+      { keyword: "ecommerce website", clicks: 216, impressions: 5680, ctr: 0.0380, position: 7.8 },
+      { keyword: "responsive design", clicks: 178, impressions: 4325, ctr: 0.0412, position: 6.3 },
+      { keyword: "business website cost", clicks: 156, impressions: 3980, ctr: 0.0392, position: 5.7 }
+    ],
+    pages: [
+      { url: "/services", clicks: 520, impressions: 15400, ctr: 0.0338, position: 4.2 },
+      { url: "/portfolio", clicks: 340, impressions: 9200, ctr: 0.0370, position: 5.1 },
+      { url: "/ecommerce", clicks: 310, impressions: 7840, ctr: 0.0395, position: 5.8 },
+      { url: "/pricing", clicks: 290, impressions: 5600, ctr: 0.0518, position: 3.4 },
+      { url: "/contact", clicks: 150, impressions: 3200, ctr: 0.0469, position: 6.7 }
+    ],
+    devices: [
+      { device: "MOBILE", clicks: 980, impressions: 25000 },
+      { device: "DESKTOP", clicks: 620, impressions: 12000 },
+      { device: "TABLET", clicks: 170, impressions: 3800 }
+    ],
+    countries: [
+      { country: "United States", clicks: 1120, impressions: 28000 },
+      { country: "United Kingdom", clicks: 320, impressions: 7500 },
+      { country: "Canada", clicks: 180, impressions: 4200 },
+      { country: "Australia", clicks: 120, impressions: 2800 },
+      { country: "Germany", clicks: 80, impressions: 1300 }
+    ],
+    totals: {
+      clicks: 1820,
+      impressions: 43500,
+      ctr: 0.0418,
+      position: 5.2
+    }
+  };
   
   return (
     <>
@@ -516,7 +553,7 @@ export default function Analytics() {
             </div>
           </CardContent>
         </Card>
-      ) : searchConsoleData ? (
+      ) : mockSearchConsoleData ? (
         <>
           <Card className="mt-8">
             <div className="px-6 py-4 border-b border-slate-200">

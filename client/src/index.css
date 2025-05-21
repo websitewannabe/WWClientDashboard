@@ -2,26 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom classes for guided tours and tooltips */
-.tour-highlight {
-  position: relative;
-  z-index: 51;
-  box-shadow: 0 0 0 2px #FF5722, 0 0 0 5px rgba(255, 87, 34, 0.3);
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 2px #FF5722, 0 0 0 5px rgba(255, 87, 34, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 0 2px #FF5722, 0 0 0 12px rgba(255, 87, 34, 0.1);
-  }
-  100% {
-    box-shadow: 0 0 0 2px #FF5722, 0 0 0 5px rgba(255, 87, 34, 0.3);
-  }
-}
-
 :root {
       --background: 0 0% 100%;
 --foreground: 20 14.3% 4.1%;

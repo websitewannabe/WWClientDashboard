@@ -2,17 +2,14 @@ import PageHeader from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Filter, Download, Eye, Calendar, HelpCircle, Info } from "lucide-react";
+import { Filter, Download, Eye, Calendar } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import InvoicePDFModal from "@/components/invoices/invoice-pdf-modal";
 import InvoiceDetailModal from "@/components/invoices/invoice-detail-modal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
-import HelpTooltip from "@/components/ui/help-tooltip";
-import { useTour, tourDefinitions } from "@/components/tour/tour-provider";
 
 interface Invoice {
   id: string;
@@ -113,19 +110,6 @@ export default function Invoices() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [dateRange, setDateRange] = useState<{start: Date | null, end: Date | null}>({start: null, end: null});
   const { isAuthenticated } = useAuth();
-  const { startTour, isTourCompleted } = useTour();
-  
-  // Start the tour for first-time visitors
-  useEffect(() => {
-    const invoicesTour = tourDefinitions.find(tour => tour.id === 'invoices-tour');
-    if (invoicesTour && !isTourCompleted('invoices-tour')) {
-      // Small delay to ensure page elements are fully rendered
-      const timer = setTimeout(() => {
-        startTour(invoicesTour);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [startTour, isTourCompleted]);
 
   const { data: invoices, isLoading } = useQuery({
     queryKey: ["/api/invoices"],
@@ -202,7 +186,7 @@ export default function Invoices() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-lg font-medium leading-6 text-slate-900">All Invoices</h3>
             <div className="flex items-center gap-2">
-              <div className="relative w-64 search-invoices">
+              <div className="relative w-64">
                 <input
                   type="text"
                   placeholder="Search invoices..."
@@ -224,21 +208,9 @@ export default function Invoices() {
               
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-1 date-filter">
+                  <Button variant="outline" className="flex items-center gap-1">
                     <Calendar className="h-4 w-4" />
                     <span>Date Filter</span>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="ml-1">
-                            <HelpCircle className="h-3 w-3 text-gray-400" />
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="max-w-xs text-xs">Filter invoices by date range to view invoices from specific time periods.</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-4" align="end">
@@ -284,41 +256,35 @@ export default function Invoices() {
                 </PopoverContent>
               </Popover>
             </div>
-            <div className="flex space-x-3 status-filters">
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  className={`${statusFilter === 'all' ? 'bg-primary-50 text-primary-700' : ''}`}
-                  onClick={() => setStatusFilter('all')}
-                >
-                  All
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className={`${statusFilter === 'pending' ? 'bg-primary-50 text-primary-700' : ''}`}
-                  onClick={() => setStatusFilter('pending')}
-                >
-                  Pending
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className={`${statusFilter === 'paid' ? 'bg-primary-50 text-primary-700' : ''}`}
-                  onClick={() => setStatusFilter('paid')}
-                >
-                  Paid
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className={`${statusFilter === 'overdue' ? 'bg-primary-50 text-primary-700' : ''}`}
-                  onClick={() => setStatusFilter('overdue')}
-                >
-                  Overdue
-                </Button>
-                <HelpTooltip 
-                  content="Filter invoices by their payment status. Click on a status to see only invoices of that type."
-                  side="bottom"
-                />
-              </div>
+            <div className="flex space-x-3">
+              <Button 
+                variant="outline" 
+                className={`${statusFilter === 'all' ? 'bg-primary-50 text-primary-700' : ''}`}
+                onClick={() => setStatusFilter('all')}
+              >
+                All
+              </Button>
+              <Button 
+                variant="outline" 
+                className={`${statusFilter === 'pending' ? 'bg-primary-50 text-primary-700' : ''}`}
+                onClick={() => setStatusFilter('pending')}
+              >
+                Pending
+              </Button>
+              <Button 
+                variant="outline" 
+                className={`${statusFilter === 'paid' ? 'bg-primary-50 text-primary-700' : ''}`}
+                onClick={() => setStatusFilter('paid')}
+              >
+                Paid
+              </Button>
+              <Button 
+                variant="outline" 
+                className={`${statusFilter === 'overdue' ? 'bg-primary-50 text-primary-700' : ''}`}
+                onClick={() => setStatusFilter('overdue')}
+              >
+                Overdue
+              </Button>
             </div>
           </div>
         </div>
@@ -327,7 +293,7 @@ export default function Invoices() {
           <div className="p-8 text-center">Loading invoices...</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200 invoice-table">
+            <table className="min-w-full divide-y divide-slate-200">
               <thead className="bg-slate-50">
                 <tr>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
@@ -374,7 +340,7 @@ export default function Invoices() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {getStatusBadge(invoice.status)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium invoice-actions">
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <InvoiceDetailModal
                         invoice={invoice}
                         trigger={
@@ -398,11 +364,6 @@ export default function Invoices() {
                             PDF
                           </Button>
                         }
-                      />
-                      <HelpTooltip 
-                        content="View invoice details or download a PDF copy for your records."
-                        side="left"
-                        className="ml-1"
                       />
                     </td>
                   </tr>

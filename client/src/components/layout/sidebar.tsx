@@ -22,11 +22,11 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
   const { user, isAuthenticated } = useAuth();
 
   const navItems = [
-    { path: "/", label: "Dashboard", icon: <LayoutDashboard className="mr-3 h-5 w-5 text-[#FF5722]" /> },
-    { path: "/invoices", label: "Invoices", icon: <FileText className="mr-3 h-5 w-5 text-[#FF5722]" /> },
-    { path: "/analytics", label: "Analytics", icon: <BarChart className="mr-3 h-5 w-5 text-[#FF5722]" /> },
-    { path: "/support", label: "Support", icon: <HeadphonesIcon className="mr-3 h-5 w-5 text-[#FF5722]" /> },
-    { path: "/settings", label: "Settings", icon: <Settings className="mr-3 h-5 w-5 text-[#FF5722]" /> }
+    { path: "/", label: "Dashboard", icon: <LayoutDashboard className="mr-3 h-5 w-5" /> },
+    { path: "/invoices", label: "Invoices", icon: <FileText className="mr-3 h-5 w-5" /> },
+    { path: "/analytics", label: "Analytics", icon: <BarChart className="mr-3 h-5 w-5" /> },
+    { path: "/support", label: "Support", icon: <HeadphonesIcon className="mr-3 h-5 w-5" /> },
+    { path: "/settings", label: "Settings", icon: <Settings className="mr-3 h-5 w-5" /> }
   ];
 
   // Mobile sidebar using Sheet component
@@ -106,8 +106,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
               className={cn(
                 "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
                 location === item.path
-                  ? "bg-[#FF5722] text-white [&>svg]:text-white"
-                  : "text-[#FF5722] hover:bg-white hover:text-black [&>svg]:text-[#FF5722] hover:[&>svg]:text-black"
+                  ? "bg-[#FF5722] text-white"
+                  : "text-[#FF5722] hover:bg-white hover:text-black"
               )}
             >
               {item.icon}

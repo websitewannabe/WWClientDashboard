@@ -272,11 +272,19 @@ export default function Support() {
                     </thead>
                     <tbody className="bg-white divide-y divide-slate-200">
                       {isLoading ? (
-                        <tr>
-                          <td colSpan={8} className="px-6 py-4 text-center text-sm text-slate-500">
-                            Loading tickets...
-                          </td>
-                        </tr>
+                        <>
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <tr key={`skeleton-${index}`}>
+                              <td colSpan={8} className="px-3 py-2">
+                                <div className="flex items-center space-x-4">
+                                  <div className="flex-shrink-0">
+                                    <TableRowSkeleton />
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </>
                       ) : filteredTickets.length === 0 ? (
                         <tr>
                           <td colSpan={8} className="px-6 py-4 text-center text-sm text-slate-500">

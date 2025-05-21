@@ -150,7 +150,10 @@ const GuidedTour: React.FC<TourProps> = ({ steps, onComplete, onSkip, isOpen }) 
         <div className="p-4">
           <div className="flex justify-between items-center mb-2">
             <h3 className="font-semibold text-lg">{currentTourStep.title}</h3>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={onSkip}>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={(e) => {
+              e.stopPropagation();
+              onSkip();
+            }}>
               <X className="h-4 w-4" />
             </Button>
           </div>

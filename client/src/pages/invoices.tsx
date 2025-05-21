@@ -202,7 +202,7 @@ export default function Invoices() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-lg font-medium leading-6 text-slate-900">All Invoices</h3>
             <div className="flex items-center gap-2">
-              <div className="relative w-64">
+              <div className="relative w-64 search-invoices">
                 <input
                   type="text"
                   placeholder="Search invoices..."
@@ -224,9 +224,21 @@ export default function Invoices() {
               
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-1">
+                  <Button variant="outline" className="flex items-center gap-1 date-filter">
                     <Calendar className="h-4 w-4" />
                     <span>Date Filter</span>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="ml-1">
+                            <HelpCircle className="h-3 w-3 text-gray-400" />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs text-xs">Filter invoices by date range to view invoices from specific time periods.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-4" align="end">
@@ -272,35 +284,41 @@ export default function Invoices() {
                 </PopoverContent>
               </Popover>
             </div>
-            <div className="flex space-x-3">
-              <Button 
-                variant="outline" 
-                className={`${statusFilter === 'all' ? 'bg-primary-50 text-primary-700' : ''}`}
-                onClick={() => setStatusFilter('all')}
-              >
-                All
-              </Button>
-              <Button 
-                variant="outline" 
-                className={`${statusFilter === 'pending' ? 'bg-primary-50 text-primary-700' : ''}`}
-                onClick={() => setStatusFilter('pending')}
-              >
-                Pending
-              </Button>
-              <Button 
-                variant="outline" 
-                className={`${statusFilter === 'paid' ? 'bg-primary-50 text-primary-700' : ''}`}
-                onClick={() => setStatusFilter('paid')}
-              >
-                Paid
-              </Button>
-              <Button 
-                variant="outline" 
-                className={`${statusFilter === 'overdue' ? 'bg-primary-50 text-primary-700' : ''}`}
-                onClick={() => setStatusFilter('overdue')}
-              >
-                Overdue
-              </Button>
+            <div className="flex space-x-3 status-filters">
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  className={`${statusFilter === 'all' ? 'bg-primary-50 text-primary-700' : ''}`}
+                  onClick={() => setStatusFilter('all')}
+                >
+                  All
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className={`${statusFilter === 'pending' ? 'bg-primary-50 text-primary-700' : ''}`}
+                  onClick={() => setStatusFilter('pending')}
+                >
+                  Pending
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className={`${statusFilter === 'paid' ? 'bg-primary-50 text-primary-700' : ''}`}
+                  onClick={() => setStatusFilter('paid')}
+                >
+                  Paid
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className={`${statusFilter === 'overdue' ? 'bg-primary-50 text-primary-700' : ''}`}
+                  onClick={() => setStatusFilter('overdue')}
+                >
+                  Overdue
+                </Button>
+                <HelpTooltip 
+                  content="Filter invoices by their payment status. Click on a status to see only invoices of that type."
+                  side="bottom"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -309,7 +327,7 @@ export default function Invoices() {
           <div className="p-8 text-center">Loading invoices...</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200">
+            <table className="min-w-full divide-y divide-slate-200 invoice-table">
               <thead className="bg-slate-50">
                 <tr>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
@@ -356,7 +374,7 @@ export default function Invoices() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {getStatusBadge(invoice.status)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium invoice-actions">
                       <InvoiceDetailModal
                         invoice={invoice}
                         trigger={
@@ -380,6 +398,11 @@ export default function Invoices() {
                             PDF
                           </Button>
                         }
+                      />
+                      <HelpTooltip 
+                        content="View invoice details or download a PDF copy for your records."
+                        side="left"
+                        className="ml-1"
                       />
                     </td>
                   </tr>

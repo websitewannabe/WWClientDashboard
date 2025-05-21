@@ -26,10 +26,15 @@ import Sidebar from "@/components/layout/sidebar";
 import MobileNav from "@/components/layout/mobile-nav";
 import Header from "@/components/layout/header";
 import IntercomProvider from "@/components/intercom/intercom-provider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { initGA } from "./lib/analytics";
+import { useAnalytics } from "./hooks/use-analytics";
 
 function Router() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  // Use our analytics hook to track page views as the user navigates
+  useAnalytics();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -72,6 +77,16 @@ function Router() {
 }
 
 function App() {
+  // Initialize Google Analytics when the app loads
+  useEffect(() => {
+    if (import.meta.env.VITE_GA_MEASUREMENT_ID) {
+      initGA();
+      console.log('Google Analytics initialized with ID:', import.meta.env.VITE_GA_MEASUREMENT_ID);
+    } else {
+      console.warn('Google Analytics Measurement ID not found');
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <IntercomProvider>

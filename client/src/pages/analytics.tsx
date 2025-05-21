@@ -211,8 +211,13 @@ export default function Analytics() {
   }
   
   // Use our real data if available, otherwise fall back to demo data
-  const displayData = analyticsData ? formatAnalyticsForChart(analyticsData) : trafficData;
-  const currentMetricCards = analyticsData ? getMetricCards(analyticsData) : metricCards;
+  const displayData = analyticsData && typeof analyticsData === 'object' && 'dates' in analyticsData 
+    ? formatAnalyticsForChart(analyticsData as AnalyticsData) 
+    : trafficData;
+    
+  const currentMetricCards = analyticsData && typeof analyticsData === 'object' && 'totals' in analyticsData
+    ? getMetricCards(analyticsData as AnalyticsData) 
+    : metricCards;
   
   return (
     <>
@@ -226,11 +231,11 @@ export default function Analytics() {
         <Card>
           <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
             <h3 className="text-lg font-medium leading-6 text-slate-900">Website Traffic</h3>
-            <Tabs defaultValue={timeframe} onValueChange={setTimeframe}>
+            <Tabs defaultValue={timeframe} onValueChange={handleTimeframeChange}>
               <TabsList>
-                <TabsTrigger value="weekly">Weekly</TabsTrigger>
-                <TabsTrigger value="monthly">Monthly</TabsTrigger>
-                <TabsTrigger value="yearly">Yearly</TabsTrigger>
+                <TabsTrigger value="last7days">Last 7 Days</TabsTrigger>
+                <TabsTrigger value="last30days">Last 30 Days</TabsTrigger>
+                <TabsTrigger value="last90days">Last 90 Days</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -238,7 +243,7 @@ export default function Analytics() {
             <div className="h-[350px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
-                  data={trafficData}
+                  data={displayData}
                   margin={{
                     top: 10,
                     right: 30,
@@ -283,7 +288,7 @@ export default function Analytics() {
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-6">
-        {metricCards.map((metric) => (
+        {currentMetricCards.map((metric) => (
           <Card key={metric.name}>
             <CardContent className="p-5">
               <h4 className="text-sm font-medium text-slate-500">{metric.name}</h4>

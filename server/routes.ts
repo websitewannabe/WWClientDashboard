@@ -3,6 +3,8 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
+import { fetchIntercomTickets, getIntercomTicketById } from "./intercom";
+
 export async function registerRoutes(app: Express): Server {
   // Auth middleware
   await setupAuth(app);
@@ -95,6 +97,40 @@ export async function registerRoutes(app: Express): Server {
     }
   });
 
+  // Intercom ticket integration routes
+  app.get('/api/tickets/intercom', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user || !user.email) {
+        return res.status(400).json({ message: 'User email not found' });
+      }
+      
+      const tickets = await fetchIntercomTickets(user.email);
+      res.json(tickets);
+    } catch (error) {
+      console.error('Error fetching Intercom tickets:', error);
+      res.status(500).json({ message: 'Failed to fetch tickets from Intercom' });
+    }
+  });
+
+  app.get('/api/tickets/intercom/:ticketId', isAuthenticated, async (req, res) => {
+    try {
+      const ticketId = req.params.ticketId;
+      const ticket = await getIntercomTicketById(ticketId);
+      
+      if (!ticket) {
+        return res.status(404).json({ message: 'Ticket not found' });
+      }
+      
+      res.json(ticket);
+    } catch (error) {
+      console.error('Error fetching Intercom ticket details:', error);
+      res.status(500).json({ message: 'Failed to fetch ticket details from Intercom' });
+    }
+  });
+  
   const httpServer = createServer(app);
   return httpServer;
 }

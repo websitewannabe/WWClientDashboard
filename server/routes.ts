@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
 import { fetchIntercomTickets, getIntercomTicketById } from "./intercom";
+import { syncIntercomContactsToUsers, importIntercomContactByEmail } from "./intercom-sync";
 
 export async function registerRoutes(app: Express): Server {
   // Auth middleware
@@ -128,6 +129,38 @@ export async function registerRoutes(app: Express): Server {
     } catch (error) {
       console.error('Error fetching Intercom ticket details:', error);
       res.status(500).json({ message: 'Failed to fetch ticket details from Intercom' });
+    }
+  });
+
+  // Intercom contacts sync endpoints (admin only)
+  app.post('/api/admin/intercom/sync-all-contacts', isAuthenticated, async (req: any, res) => {
+    try {
+      // In a production environment, you'd want to ensure this is only called by admins
+      const result = await syncIntercomContactsToUsers();
+      res.json(result);
+    } catch (error) {
+      console.error('Error syncing Intercom contacts:', error);
+      res.status(500).json({ message: 'Error syncing Intercom contacts' });
+    }
+  });
+  
+  // Import a single Intercom contact by email
+  app.post('/api/admin/intercom/import-contact', isAuthenticated, async (req: any, res) => {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        return res.status(400).json({ message: 'Email is required' });
+      }
+      
+      const success = await importIntercomContactByEmail(email);
+      if (success) {
+        res.json({ message: 'Contact imported successfully' });
+      } else {
+        res.status(404).json({ message: 'Contact not found in Intercom' });
+      }
+    } catch (error) {
+      console.error('Error importing Intercom contact:', error);
+      res.status(500).json({ message: 'Error importing Intercom contact' });
     }
   });
   

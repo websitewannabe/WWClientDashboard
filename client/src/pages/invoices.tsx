@@ -7,6 +7,8 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
+import InvoicePDFModal from "@/components/invoices/invoice-pdf-modal";
+import InvoiceDetailModal from "@/components/invoices/invoice-detail-modal";
 
 interface Invoice {
   id: string;
@@ -102,7 +104,8 @@ const invoicesData: Invoice[] = [
 ];
 
 export default function Invoices() {
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState<string>('all');
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const { isAuthenticated } = useAuth();
 
   const { data: invoices, isLoading } = useQuery({
@@ -111,11 +114,11 @@ export default function Invoices() {
   });
 
   // Use dummy data until real data is available
-  const displayInvoices = invoices || invoicesData;
+  const displayInvoices: Invoice[] = invoices || invoicesData;
 
   const filteredInvoices = filter === 'all' 
     ? displayInvoices 
-    : displayInvoices.filter(invoice => invoice.status === filter);
+    : displayInvoices.filter((invoice: Invoice) => invoice.status === filter);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -131,7 +134,8 @@ export default function Invoices() {
   };
 
   const handleExport = () => {
-    console.log("Export invoices");
+    // This would typically generate a combined report of all invoices
+    alert("This would download a combined PDF of all invoices");
   };
 
   return (
@@ -236,10 +240,21 @@ export default function Invoices() {
                         <Eye className="h-4 w-4 mr-1" />
                         View
                       </Button>
-                      <Button variant="ghost" size="sm" className="text-primary-600 hover:text-primary-700 ml-2">
-                        <Download className="h-4 w-4 mr-1" />
-                        Download
-                      </Button>
+                      <InvoicePDFModal
+                        invoice={{
+                          ...invoice,
+                          clientName: "Your Company Name",
+                          clientEmail: "your.email@example.com",
+                          paymentTerms: "Due on Receipt",
+                          dueDate: invoice.dueDate || invoice.date,
+                        }}
+                        trigger={
+                          <Button variant="ghost" size="sm" className="text-primary-600 hover:text-primary-700 ml-2">
+                            <Download className="h-4 w-4 mr-1" />
+                            PDF
+                          </Button>
+                        }
+                      />
                     </td>
                   </tr>
                 ))}

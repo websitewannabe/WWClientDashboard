@@ -9,6 +9,14 @@ import Invoices from "@/pages/invoices";
 import Analytics from "@/pages/analytics";
 import Support from "@/pages/support";
 import Settings from "@/pages/settings";
+import Projects from "@/pages/projects";
+import Hosting from "@/pages/hosting";
+import Domains from "@/pages/domains";
+import SEOReports from "@/pages/seo";
+import ContentCalendar from "@/pages/content";
+import Resources from "@/pages/resources";
+import Payments from "@/pages/payments";
+import Team from "@/pages/team";
 import Sidebar from "@/components/layout/sidebar";
 import MobileNav from "@/components/layout/mobile-nav";
 import Header from "@/components/layout/header";
@@ -33,7 +41,15 @@ function Router() {
           <Switch>
             <Route path="/" component={Dashboard} />
             <Route path="/invoices" component={Invoices} />
+            <Route path="/projects" component={Projects} />
+            <Route path="/hosting" component={Hosting} />
+            <Route path="/domains" component={Domains} />
             <Route path="/analytics" component={Analytics} />
+            <Route path="/seo" component={SEOReports} />
+            <Route path="/content" component={ContentCalendar} />
+            <Route path="/resources" component={Resources} />
+            <Route path="/payments" component={Payments} />
+            <Route path="/team" component={Team} />
             <Route path="/support" component={Support} />
             <Route path="/settings" component={Settings} />
             <Route component={NotFound} />

@@ -56,6 +56,9 @@ function Router() {
             <Route path="/team" component={Team} />
             <Route path="/support" component={Support} />
             <Route path="/settings" component={Settings} />
+            <Route path="/admin" component={AdminDashboard} />
+            <Route path="/admin/client-detail" component={ClientDetailPage} />
+            <Route path="/admin/add-client" component={AddClientPage} />
             <Route component={NotFound} />
           </Switch>
         </main>

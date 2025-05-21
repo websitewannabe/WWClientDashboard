@@ -17,6 +17,7 @@ import {
   Paperclip,
   CreditCard,
   Package,
+  Shield,
   Users,
   Menu,
   X
@@ -46,7 +47,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     { path: "/payments", label: "Payments", icon: <CreditCard className="mr-3 h-5 w-5" /> },
     { path: "/team", label: "Team", icon: <Users className="mr-3 h-5 w-5" /> },
     { path: "/support", label: "Support", icon: <HeadphonesIcon className="mr-3 h-5 w-5" /> },
-    { path: "/settings", label: "Settings", icon: <Settings className="mr-3 h-5 w-5" /> }
+    { path: "/settings", label: "Settings", icon: <Settings className="mr-3 h-5 w-5" /> },
+    { path: "/admin", label: "Admin Portal", icon: <Users className="mr-3 h-5 w-5" /> }
   ];
 
   // Mobile sidebar using Sheet component

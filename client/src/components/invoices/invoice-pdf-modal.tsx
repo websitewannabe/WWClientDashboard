@@ -25,7 +25,8 @@ const InvoicePDFModal: React.FC<InvoicePDFModalProps> = ({ invoice, trigger }) =
     phone: '(555) 123-4567',
     email: 'support@websitewannabe.com',
     website: 'www.websitewannabe.com',
-    logo: companyLogo
+    // Remove the logo to avoid "Not valid image extension" warnings
+    logo: undefined
   };
 
   const handleDownloadPDF = async () => {
@@ -96,13 +97,7 @@ const InvoicePDFModal: React.FC<InvoicePDFModalProps> = ({ invoice, trigger }) =
               )}
               Download PDF
             </Button>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setOpen(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
+
           </div>
         </DialogHeader>
         <div className="flex-1 overflow-auto bg-gray-100 rounded-md">

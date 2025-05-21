@@ -329,84 +329,249 @@ export default function Analytics() {
 
       <div className="mb-6">
         <Card>
-          <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center flex-wrap gap-4">
-            <div className="flex items-center space-x-4">
-              <h3 className="text-lg font-medium leading-6 text-slate-900">Website Analytics</h3>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-2">
-                    {dataSource === "google-analytics" && "Google Analytics"}
-                    {dataSource === "google-search-console" && "Google Search Console"}
-                    {dataSource === "google-business-profile" && "Google Business Profile"}
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  <DropdownMenuItem onClick={() => handleDataSourceChange("google-analytics")}>
-                    Google Analytics
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleDataSourceChange("google-search-console")}>
-                    Google Search Console
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleDataSourceChange("google-business-profile")}>
-                    Google Business Profile
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+          <div className="px-6 py-4 border-b border-slate-200 flex flex-col gap-4">
+            <h3 className="text-lg font-medium leading-6 text-slate-900">Website Analytics</h3>
             
-            <Tabs defaultValue={timeframe} onValueChange={handleTimeframeChange}>
-              <TabsList>
-                <TabsTrigger value="last7days">Last 7 Days</TabsTrigger>
-                <TabsTrigger value="last30days">Last 30 Days</TabsTrigger>
-                <TabsTrigger value="last90days">Last 90 Days</TabsTrigger>
-              </TabsList>
-            </Tabs>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <Tabs defaultValue={dataSource} onValueChange={handleDataSourceChange} className="w-full sm:w-auto">
+                <TabsList className="w-full sm:w-auto">
+                  <TabsTrigger value="google-analytics">Google Analytics</TabsTrigger>
+                  <TabsTrigger value="google-search-console">Search Console</TabsTrigger>
+                  <TabsTrigger value="google-business-profile">Business Profile</TabsTrigger>
+                </TabsList>
+              </Tabs>
+              
+              <Tabs defaultValue={timeframe} onValueChange={handleTimeframeChange}>
+                <TabsList>
+                  <TabsTrigger value="last7days">Last 7 Days</TabsTrigger>
+                  <TabsTrigger value="last30days">Last 30 Days</TabsTrigger>
+                  <TabsTrigger value="last90days">Last 90 Days</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
           </div>
           <CardContent className="p-6">
-            <div className="h-[350px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                  data={displayData}
-                  margin={{
-                    top: 10,
-                    right: 30,
-                    left: 0,
-                    bottom: 0,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Area 
-                    type="monotone" 
-                    dataKey="pageViews" 
-                    stroke="#3b82f6" 
-                    fill="#3b82f6" 
-                    fillOpacity={0.6} 
-                    name="Page Views"
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="visitors" 
-                    stroke="#22c55e" 
-                    fill="#22c55e" 
-                    fillOpacity={0.6}
-                    name="Unique Visitors" 
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="sessions" 
-                    stroke="#f59e0b" 
-                    fill="#f59e0b" 
-                    fillOpacity={0.6}
-                    name="Sessions" 
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+            {dataSource === "google-analytics" && (
+              <div className="space-y-8">
+                <div className="h-[350px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                      data={displayData}
+                      margin={{
+                        top: 10,
+                        right: 30,
+                        left: 0,
+                        bottom: 0,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="date" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Area 
+                        type="monotone" 
+                        dataKey="pageViews" 
+                        stroke="#3b82f6" 
+                        fill="#3b82f6" 
+                        fillOpacity={0.6} 
+                        name="Page Views"
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="visitors" 
+                        stroke="#22c55e" 
+                        fill="#22c55e" 
+                        fillOpacity={0.6}
+                        name="Unique Visitors" 
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="sessions" 
+                        stroke="#f59e0b" 
+                        fill="#f59e0b" 
+                        fillOpacity={0.6}
+                        name="Sessions" 
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mt-8">
+                  {currentMetricCards.map((metric, index) => (
+                    <div key={index} className="p-4 bg-white border rounded-lg shadow-sm">
+                      <h3 className="text-sm font-medium text-slate-500">{metric.name}</h3>
+                      <p className="mt-2 text-3xl font-semibold text-slate-900">{metric.value}</p>
+                      <div className={`mt-1 flex items-center text-xs ${
+                        metric.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {metric.changeType === 'positive' ? (
+                          <ArrowUpIcon className="mr-1 h-3 w-3" />
+                        ) : (
+                          <ArrowDownIcon className="mr-1 h-3 w-3" />
+                        )}
+                        <span>{metric.change}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {dataSource === "google-search-console" && (
+              <div className="space-y-8">
+                <div className="h-[350px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart
+                      data={[
+                        { date: 'Mon', clicks: 210, impressions: 520, ctr: 4.0, position: 25.2 },
+                        { date: 'Tue', clicks: 230, impressions: 540, ctr: 4.2, position: 24.8 },
+                        { date: 'Wed', clicks: 250, impressions: 580, ctr: 4.3, position: 24.5 },
+                        { date: 'Thu', clicks: 280, impressions: 620, ctr: 4.5, position: 24.0 },
+                        { date: 'Fri', clicks: 310, impressions: 700, ctr: 4.4, position: 23.7 },
+                        { date: 'Sat', clicks: 290, impressions: 680, ctr: 4.3, position: 23.5 },
+                        { date: 'Sun', clicks: 250, impressions: 650, ctr: 3.8, position: 23.8 }
+                      ]}
+                      margin={{
+                        top: 10,
+                        right: 30,
+                        left: 0,
+                        bottom: 0,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="date" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Line 
+                        type="monotone" 
+                        dataKey="clicks" 
+                        stroke="#3b82f6" 
+                        name="Clicks" 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="impressions" 
+                        stroke="#22c55e" 
+                        name="Impressions" 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="position" 
+                        stroke="#f59e0b" 
+                        name="Position" 
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="p-4 bg-white border rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-slate-500">Total Clicks</h3>
+                    <p className="mt-2 text-3xl font-semibold text-slate-900">1,820</p>
+                    <div className="mt-1 flex items-center text-xs text-green-600">
+                      <ArrowUpIcon className="mr-1 h-3 w-3" />
+                      <span>+8.4%</span>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-white border rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-slate-500">Total Impressions</h3>
+                    <p className="mt-2 text-3xl font-semibold text-slate-900">43,500</p>
+                    <div className="mt-1 flex items-center text-xs text-green-600">
+                      <ArrowUpIcon className="mr-1 h-3 w-3" />
+                      <span>+12.7%</span>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-white border rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-slate-500">Average CTR</h3>
+                    <p className="mt-2 text-3xl font-semibold text-slate-900">4.18%</p>
+                    <div className="mt-1 flex items-center text-xs text-red-600">
+                      <ArrowDownIcon className="mr-1 h-3 w-3" />
+                      <span>-0.5%</span>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-white border rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-slate-500">Average Position</h3>
+                    <p className="mt-2 text-3xl font-semibold text-slate-900">5.2</p>
+                    <div className="mt-1 flex items-center text-xs text-green-600">
+                      <ArrowUpIcon className="mr-1 h-3 w-3" />
+                      <span>+0.7</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {dataSource === "google-business-profile" && (
+              <div className="space-y-8">
+                <div className="h-[350px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart
+                      data={[
+                        { date: 'Jan', views: 3200, searches: 1800, actions: 420 },
+                        { date: 'Feb', views: 3400, searches: 1900, actions: 450 },
+                        { date: 'Mar', views: 3800, searches: 2100, actions: 480 },
+                        { date: 'Apr', views: 4200, searches: 2300, actions: 510 },
+                        { date: 'May', views: 4600, searches: 2500, actions: 550 },
+                        { date: 'Jun', views: 5000, searches: 2700, actions: 600 },
+                        { date: 'Jul', views: 5342, searches: 2870, actions: 689 }
+                      ]}
+                      margin={{
+                        top: 10,
+                        right: 30,
+                        left: 0,
+                        bottom: 0,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="date" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Line type="monotone" dataKey="views" stroke="#3b82f6" name="Profile Views" />
+                      <Line type="monotone" dataKey="searches" stroke="#22c55e" name="Local Searches" />
+                      <Line type="monotone" dataKey="actions" stroke="#f59e0b" name="Customer Actions" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="p-4 bg-white border rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-slate-500">Total Views</h3>
+                    <p className="mt-2 text-3xl font-semibold text-slate-900">5,342</p>
+                    <div className="mt-1 flex items-center text-xs text-green-600">
+                      <ArrowUpIcon className="mr-1 h-3 w-3" />
+                      <span>+8.3%</span>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-white border rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-slate-500">Total Searches</h3>
+                    <p className="mt-2 text-3xl font-semibold text-slate-900">2,870</p>
+                    <div className="mt-1 flex items-center text-xs text-green-600">
+                      <ArrowUpIcon className="mr-1 h-3 w-3" />
+                      <span>+12.5%</span>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-white border rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-slate-500">Customer Actions</h3>
+                    <p className="mt-2 text-3xl font-semibold text-slate-900">689</p>
+                    <div className="mt-1 flex items-center text-xs text-green-600">
+                      <ArrowUpIcon className="mr-1 h-3 w-3" />
+                      <span>+5.2%</span>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-white border rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-slate-500">Review Rating</h3>
+                    <p className="mt-2 text-3xl font-semibold text-slate-900">4.8</p>
+                    <div className="mt-1 flex items-center text-xs text-green-600">
+                      <ArrowUpIcon className="mr-1 h-3 w-3" />
+                      <span>+0.2</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

@@ -293,6 +293,12 @@ export default function AdminDashboard() {
                 Import Intercom Contacts
               </a>
             </Button>
+            <Button asChild variant="outline" className="inline-flex">
+              <a href="/admin/client-analytics">
+                <Filter className="h-4 w-4 mr-2" />
+                Client Analytics
+              </a>
+            </Button>
           </div>
         </div>
         

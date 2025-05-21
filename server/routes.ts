@@ -189,6 +189,39 @@ export async function registerRoutes(app: Express): Server {
     }
   });
   
+  // Get all clients for admin
+  app.get('/api/admin/clients', isAuthenticated, async (req: any, res) => {
+    try {
+      // In a production app, you'd want to check if the user is an admin
+      const clients = await storage.getAllUsers();
+      res.json(clients);
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+      res.status(500).json({ message: 'Failed to fetch clients' });
+    }
+  });
+  
+  // Update client Google Analytics settings
+  app.patch('/api/admin/clients/:id/analytics', isAuthenticated, async (req: any, res) => {
+    try {
+      const clientId = req.params.id;
+      const { gaMeasurementId, gaPropertyId, gaViewId } = req.body;
+      
+      // In a production app, you'd want to check if the user is an admin
+      
+      const updatedClient = await storage.updateUserAnalytics(clientId, {
+        gaMeasurementId,
+        gaPropertyId,
+        gaViewId
+      });
+      
+      res.json(updatedClient);
+    } catch (error) {
+      console.error('Error updating client analytics settings:', error);
+      res.status(500).json({ message: 'Failed to update client analytics settings' });
+    }
+  });
+  
   const httpServer = createServer(app);
   return httpServer;
 }

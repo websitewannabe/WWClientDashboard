@@ -60,18 +60,18 @@ export const trackEvent = (
   });
 };
 
-// Google Analytics Data API integration
-// This function will fetch analytics data from the Google Analytics Data API
+// Helper function to fetch analytics data from our API
 export const fetchAnalyticsData = async (
   timeframe: string = 'last30days',
-  metrics: string[] = ['activeUsers', 'screenPageViews', 'sessions'],
-  dimensions: string[] = ['date']
-) => {
+  endpoint: string = '/api/analytics/ga'
+): Promise<any> => {
   try {
-    const response = await fetch(`/api/analytics/data?timeframe=${timeframe}`);
+    const response = await fetch(`${endpoint}?timeframe=${timeframe}`);
+    
     if (!response.ok) {
       throw new Error('Failed to fetch analytics data');
     }
+    
     return await response.json();
   } catch (error) {
     console.error('Error fetching analytics data:', error);

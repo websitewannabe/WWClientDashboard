@@ -24,6 +24,14 @@ export interface IStorage {
   createUserFromIntercom(userData: UpsertUser): Promise<User>;
   updateUserFromIntercom(userId: string, userData: Partial<UpsertUser>): Promise<User>;
   
+  // Admin operations
+  getAllUsers(): Promise<User[]>;
+  updateUserAnalytics(userId: string, analyticsData: {
+    gaMeasurementId?: string;
+    gaPropertyId?: string;
+    gaViewId?: string;
+  }): Promise<User>;
+  
   // Client portal operations
   getStats(userId: string): Promise<Stats>;
   getInvoices(userId: string): Promise<Invoice[]>;
@@ -78,6 +86,31 @@ export class DatabaseStorage implements IStorage {
       .where(eq(users.id, userId))
       .returning();
     return user;
+  }
+  
+  // Add method to update user analytics settings
+  async updateUserAnalytics(userId: string, analyticsData: {
+    gaMeasurementId?: string;
+    gaPropertyId?: string;
+    gaViewId?: string;
+  }): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        ...analyticsData,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    return user;
+  }
+  
+  // Get all users (for admin)
+  async getAllUsers(): Promise<User[]> {
+    return db
+      .select()
+      .from(users)
+      .orderBy(users.createdAt);
   }
 
   // Client portal operations

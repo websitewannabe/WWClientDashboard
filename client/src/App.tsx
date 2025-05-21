@@ -15,6 +15,7 @@ import Domains from "@/pages/domains";
 import SEOReports from "@/pages/seo";
 import ContentCalendar from "@/pages/content";
 import Resources from "@/pages/resources";
+import Products from "@/pages/products";
 import Payments from "@/pages/payments";
 import Team from "@/pages/team";
 import Sidebar from "@/components/layout/sidebar";

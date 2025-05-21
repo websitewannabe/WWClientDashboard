@@ -16,6 +16,7 @@ import {
   CalendarDays,
   Paperclip,
   CreditCard,
+  Package,
   Users,
   Menu,
   X
@@ -41,6 +42,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     { path: "/seo", label: "SEO Reports", icon: <Search className="mr-3 h-5 w-5" /> },
     { path: "/content", label: "Content Calendar", icon: <CalendarDays className="mr-3 h-5 w-5" /> },
     { path: "/resources", label: "Resources", icon: <Paperclip className="mr-3 h-5 w-5" /> },
+    { path: "/products", label: "Products", icon: <CreditCard className="mr-3 h-5 w-5" /> },
     { path: "/payments", label: "Payments", icon: <CreditCard className="mr-3 h-5 w-5" /> },
     { path: "/team", label: "Team", icon: <Users className="mr-3 h-5 w-5" /> },
     { path: "/support", label: "Support", icon: <HeadphonesIcon className="mr-3 h-5 w-5" /> },

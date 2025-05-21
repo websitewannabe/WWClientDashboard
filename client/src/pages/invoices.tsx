@@ -2,13 +2,14 @@ import PageHeader from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Filter, Download, Eye } from "lucide-react";
+import { Filter, Download, Eye, Calendar } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import InvoicePDFModal from "@/components/invoices/invoice-pdf-modal";
 import InvoiceDetailModal from "@/components/invoices/invoice-detail-modal";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface Invoice {
   id: string;
@@ -107,6 +108,7 @@ export default function Invoices() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [dateRange, setDateRange] = useState<{start: Date | null, end: Date | null}>({start: null, end: null});
   const { isAuthenticated } = useAuth();
 
   const { data: invoices, isLoading } = useQuery({
@@ -118,18 +120,39 @@ export default function Invoices() {
   const displayInvoices: Invoice[] = (invoices as Invoice[]) || invoicesData;
 
   // Filter invoices by status
-  const filteredInvoices = statusFilter === 'all' 
+  const statusFiltered = statusFilter === 'all' 
     ? displayInvoices 
     : displayInvoices.filter((invoice: Invoice) => invoice.status === statusFilter);
   
+  // Filter by date range
+  const dateFiltered = statusFiltered.filter(invoice => {
+    if (!dateRange.start && !dateRange.end) return true;
+    
+    const invoiceDate = new Date(invoice.date);
+    
+    if (dateRange.start && dateRange.end) {
+      return invoiceDate >= dateRange.start && invoiceDate <= dateRange.end;
+    }
+    
+    if (dateRange.start && !dateRange.end) {
+      return invoiceDate >= dateRange.start;
+    }
+    
+    if (!dateRange.start && dateRange.end) {
+      return invoiceDate <= dateRange.end;
+    }
+    
+    return true;
+  });
+  
   // Search functionality
   const searchFilteredInvoices = searchTerm 
-    ? filteredInvoices.filter(invoice => 
+    ? dateFiltered.filter(invoice => 
         invoice.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
         invoice.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         formatCurrency(invoice.amount).includes(searchTerm)
       )
-    : filteredInvoices;
+    : dateFiltered;
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -162,24 +185,76 @@ export default function Invoices() {
         <div className="px-5 py-4 border-b border-slate-200">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-lg font-medium leading-6 text-slate-900">All Invoices</h3>
-            <div className="relative w-64">
-              <input
-                type="text"
-                placeholder="Search invoices..."
-                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              {searchTerm && (
-                <button 
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  onClick={() => setSearchTerm("")}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              )}
+            <div className="flex items-center gap-2">
+              <div className="relative w-64">
+                <input
+                  type="text"
+                  placeholder="Search invoices..."
+                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                {searchTerm && (
+                  <button 
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    onClick={() => setSearchTerm("")}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+              
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4" />
+                    <span>Date Filter</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-4" align="end">
+                  <div className="space-y-3">
+                    <h3 className="font-medium text-sm">Filter by date range</h3>
+                    <div className="grid gap-2">
+                      <div>
+                        <label className="text-xs font-medium mb-1 block">From</label>
+                        <input 
+                          type="date" 
+                          className="w-full px-3 py-1.5 rounded-md border border-gray-300" 
+                          value={dateRange.start ? dateRange.start.toISOString().split('T')[0] : ''}
+                          onChange={(e) => {
+                            const date = e.target.value ? new Date(e.target.value) : null;
+                            setDateRange(prev => ({ ...prev, start: date }));
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium mb-1 block">To</label>
+                        <input 
+                          type="date" 
+                          className="w-full px-3 py-1.5 rounded-md border border-gray-300" 
+                          value={dateRange.end ? dateRange.end.toISOString().split('T')[0] : ''}
+                          onChange={(e) => {
+                            const date = e.target.value ? new Date(e.target.value) : null;
+                            setDateRange(prev => ({ ...prev, end: date }));
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-between pt-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setDateRange({start: null, end: null})}
+                      >
+                        Clear
+                      </Button>
+                      <Button size="sm">Apply</Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
             <div className="flex space-x-3">
               <Button 

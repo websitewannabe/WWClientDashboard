@@ -34,9 +34,14 @@ export const users = pgTable("users", {
   phone: varchar("phone"),
   companyName: varchar("company_name"),
   intercomId: varchar("intercom_id"),
+  // Google Analytics credentials
   gaMeasurementId: varchar("ga_measurement_id"),
   gaPropertyId: varchar("ga_property_id"),
   gaViewId: varchar("ga_view_id"),
+  // Google Search Console credentials
+  gscSiteUrl: varchar("gsc_site_url"),
+  gscVerificationMethod: varchar("gsc_verification_method"),
+  gscVerified: varchar("gsc_verified").default("false"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

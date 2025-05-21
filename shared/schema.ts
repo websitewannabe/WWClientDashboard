@@ -34,6 +34,9 @@ export const users = pgTable("users", {
   phone: varchar("phone"),
   companyName: varchar("company_name"),
   intercomId: varchar("intercom_id"),
+  gaMeasurementId: varchar("ga_measurement_id"),
+  gaPropertyId: varchar("ga_property_id"),
+  gaViewId: varchar("ga_view_id"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

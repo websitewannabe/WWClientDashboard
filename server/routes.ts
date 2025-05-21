@@ -78,8 +78,17 @@ export async function registerRoutes(app: Express): Server {
       const userId = req.user.claims.sub;
       const timeframe = req.query.timeframe || 'last30days';
       
-      // Fetch analytics data from Google Analytics
-      const analytics = await fetchGoogleAnalyticsData(timeframe as string, userId);
+      // Get the user to fetch their GA measurement ID
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Use the client's specific GA Measurement ID if available
+      const clientGAId = user.gaMeasurementId || import.meta.env.VITE_GA_MEASUREMENT_ID;
+      
+      // Fetch analytics data from Google Analytics using the client's credentials
+      const analytics = await fetchGoogleAnalyticsData(timeframe as string, userId, clientGAId);
       res.json(analytics);
     } catch (error) {
       console.error("Error fetching Google Analytics data:", error);

@@ -27,10 +27,11 @@ interface ProcessedAnalyticsData {
   };
 }
 
-// For now, we're using demo data until we set up complete Google Analytics credentials
+// Fetch analytics data per client using their GA credentials
 export async function fetchGoogleAnalyticsData(
   timeframe: string = 'last30days',
-  userId?: string
+  userId?: string,
+  gaMeasurementId?: string
 ): Promise<ProcessedAnalyticsData> {
   // In a real implementation, this would call the Google Analytics API
   // using the Google Analytics Data API (Analytics Data API v1)

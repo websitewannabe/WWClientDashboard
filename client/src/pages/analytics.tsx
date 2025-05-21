@@ -2,7 +2,8 @@ import PageHeader from "@/components/layout/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ArrowDownIcon, ArrowUpIcon, Calendar, Loader2 } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ArrowDownIcon, ArrowUpIcon, Calendar, Loader2, AlertCircle, ExternalLink } from "lucide-react";
 import { useState, useEffect } from "react";
 import { 
   AreaChart, 
@@ -89,6 +90,40 @@ interface AnalyticsData {
   };
 }
 
+// Interface to match the response from our Google Search Console API
+interface SearchConsoleData {
+  keywords: {
+    keyword: string;
+    clicks: number;
+    impressions: number;
+    ctr: number;
+    position: number;
+  }[];
+  pages: {
+    url: string;
+    clicks: number;
+    impressions: number;
+    ctr: number;
+    position: number;
+  }[];
+  devices: {
+    device: string;
+    clicks: number;
+    impressions: number;
+  }[];
+  countries: {
+    country: string;
+    clicks: number;
+    impressions: number;
+  }[];
+  totals: {
+    clicks: number;
+    impressions: number;
+    ctr: number;
+    position: number;
+  };
+}
+
 // Helper to format the analytics data for the chart
 const formatAnalyticsForChart = (data: AnalyticsData) => {
   return data.dates.map((date, index) => ({
@@ -119,8 +154,22 @@ export default function Analytics() {
   }, []);
   
   // Fetch analytics data from our Google Analytics API
-  const { data: analyticsData, isLoading, error } = useQuery({
+  const { 
+    data: analyticsData, 
+    isLoading: isLoadingGA, 
+    error: errorGA 
+  } = useQuery({
     queryKey: ['/api/analytics/ga', timeframe],
+    enabled: isAuthenticated
+  });
+  
+  // Fetch search console data
+  const {
+    data: searchConsoleData,
+    isLoading: isLoadingSC,
+    error: errorSC
+  } = useQuery({
+    queryKey: ['/api/analytics/gsc', timeframe],
     enabled: isAuthenticated
   });
   
@@ -183,8 +232,8 @@ export default function Analytics() {
     trackEvent('change_analytics_timeframe', 'analytics', value);
   };
   
-  // If loading, show loading state
-  if (isLoading) {
+  // If both GA and GSC are loading, show loading state
+  if (isLoadingGA && isLoadingSC) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
@@ -195,8 +244,8 @@ export default function Analytics() {
     );
   }
   
-  // If error, show error state
-  if (error) {
+  // If both GA and GSC have errors, show general error state
+  if (errorGA && errorSC) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center max-w-md">
@@ -430,6 +479,162 @@ export default function Analytics() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Search Console Data Section */}
+      {errorSC ? (
+        <Card className="mt-8">
+          <div className="px-6 py-4 border-b border-slate-200">
+            <h3 className="text-lg font-medium leading-6 text-slate-900">Search Performance</h3>
+          </div>
+          <CardContent className="p-6">
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Search Console Not Configured</AlertTitle>
+              <AlertDescription>
+                Your Google Search Console is not properly configured. Please visit the admin settings page to connect your website to Search Console.
+              </AlertDescription>
+            </Alert>
+            <div className="flex justify-center mt-4">
+              <Button asChild variant="outline">
+                <a href="/admin/client-analytics">
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Configure Search Console
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ) : isLoadingSC ? (
+        <Card className="mt-8">
+          <div className="px-6 py-4 border-b border-slate-200">
+            <h3 className="text-lg font-medium leading-6 text-slate-900">Search Performance</h3>
+          </div>
+          <CardContent className="p-6 flex items-center justify-center min-h-[300px]">
+            <div className="text-center">
+              <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto mb-4" />
+              <p className="text-slate-600">Loading search data...</p>
+            </div>
+          </CardContent>
+        </Card>
+      ) : searchConsoleData ? (
+        <>
+          <Card className="mt-8">
+            <div className="px-6 py-4 border-b border-slate-200">
+              <h3 className="text-lg font-medium leading-6 text-slate-900">Search Performance Overview</h3>
+            </div>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="p-4 bg-white border rounded-lg shadow-sm">
+                  <h3 className="text-sm font-medium text-slate-500">Total Clicks</h3>
+                  <p className="mt-2 text-3xl font-semibold text-slate-900">{searchConsoleData.totals.clicks.toLocaleString()}</p>
+                </div>
+                <div className="p-4 bg-white border rounded-lg shadow-sm">
+                  <h3 className="text-sm font-medium text-slate-500">Total Impressions</h3>
+                  <p className="mt-2 text-3xl font-semibold text-slate-900">{searchConsoleData.totals.impressions.toLocaleString()}</p>
+                </div>
+                <div className="p-4 bg-white border rounded-lg shadow-sm">
+                  <h3 className="text-sm font-medium text-slate-500">Average CTR</h3>
+                  <p className="mt-2 text-3xl font-semibold text-slate-900">{(searchConsoleData.totals.ctr * 100).toFixed(2)}%</p>
+                </div>
+                <div className="p-4 bg-white border rounded-lg shadow-sm">
+                  <h3 className="text-sm font-medium text-slate-500">Average Position</h3>
+                  <p className="mt-2 text-3xl font-semibold text-slate-900">{searchConsoleData.totals.position.toFixed(1)}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Top Keywords</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-slate-200">
+                      <thead className="bg-slate-50">
+                        <tr>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Keyword</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Clicks</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Impressions</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Position</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-slate-200">
+                        {searchConsoleData.keywords.slice(0, 5).map((keyword, index) => (
+                          <tr key={index}>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">{keyword.keyword}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">{keyword.clicks}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">{keyword.impressions}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">{keyword.position.toFixed(1)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Top Pages</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-slate-200">
+                      <thead className="bg-slate-50">
+                        <tr>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">URL</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Clicks</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Impressions</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Position</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-slate-200">
+                        {searchConsoleData.pages.slice(0, 5).map((page, index) => (
+                          <tr key={index}>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900 max-w-[150px] truncate">{page.url}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">{page.clicks}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">{page.impressions}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">{page.position.toFixed(1)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Devices</h3>
+                  <div className="h-[250px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={searchConsoleData.devices}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="device" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="clicks" name="Clicks" fill="#3b82f6" />
+                        <Bar dataKey="impressions" name="Impressions" fill="#22c55e" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Top Countries</h3>
+                  <div className="h-[250px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={searchConsoleData.countries.slice(0, 5)}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="country" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="clicks" name="Clicks" fill="#3b82f6" />
+                        <Bar dataKey="impressions" name="Impressions" fill="#22c55e" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </>
+      ) : null}
     </>
   );
 }

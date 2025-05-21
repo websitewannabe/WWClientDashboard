@@ -145,7 +145,10 @@ export default function ClientAnalytics() {
       email: "contact@acmecorp.com",
       gaMeasurementId: "G-XXXXXXX1",
       gaPropertyId: "123456789",
-      gaViewId: "987654321"
+      gaViewId: "987654321",
+      gscSiteUrl: "https://acmecorp.com",
+      gscVerificationMethod: "DNS",
+      gscVerified: "true"
     },
     {
       id: "client-002",
@@ -153,7 +156,10 @@ export default function ClientAnalytics() {
       email: "info@globalenterprises.com",
       gaMeasurementId: null,
       gaPropertyId: null,
-      gaViewId: null
+      gaViewId: null,
+      gscSiteUrl: null,
+      gscVerificationMethod: null,
+      gscVerified: null
     },
     {
       id: "client-003",
@@ -161,7 +167,10 @@ export default function ClientAnalytics() {
       email: "support@localshop.com",
       gaMeasurementId: "G-XXXXXXX3",
       gaPropertyId: "111222333",
-      gaViewId: "444555666"
+      gaViewId: "444555666",
+      gscSiteUrl: "https://localshop.com",
+      gscVerificationMethod: "HTML_TAG",
+      gscVerified: "true"
     }
   ];
 

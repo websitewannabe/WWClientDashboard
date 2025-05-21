@@ -8,7 +8,17 @@ import {
   FileText, 
   BarChart, 
   HeadphonesIcon, 
-  Settings
+  Settings,
+  FolderKanban,
+  Server,
+  Globe,
+  Search,
+  CalendarDays,
+  Paperclip,
+  CreditCard,
+  Users,
+  Menu,
+  X
 } from "lucide-react";
 import type { User } from "@shared/schema";
 
@@ -24,7 +34,15 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
   const navItems = [
     { path: "/", label: "Dashboard", icon: <LayoutDashboard className="mr-3 h-5 w-5" /> },
     { path: "/invoices", label: "Invoices", icon: <FileText className="mr-3 h-5 w-5" /> },
+    { path: "/projects", label: "Projects", icon: <FolderKanban className="mr-3 h-5 w-5" /> },
+    { path: "/hosting", label: "Hosting", icon: <Server className="mr-3 h-5 w-5" /> },
+    { path: "/domains", label: "Domains", icon: <Globe className="mr-3 h-5 w-5" /> },
     { path: "/analytics", label: "Analytics", icon: <BarChart className="mr-3 h-5 w-5" /> },
+    { path: "/seo", label: "SEO Reports", icon: <Search className="mr-3 h-5 w-5" /> },
+    { path: "/content", label: "Content Calendar", icon: <CalendarDays className="mr-3 h-5 w-5" /> },
+    { path: "/resources", label: "Resources", icon: <Paperclip className="mr-3 h-5 w-5" /> },
+    { path: "/payments", label: "Payments", icon: <CreditCard className="mr-3 h-5 w-5" /> },
+    { path: "/team", label: "Team", icon: <Users className="mr-3 h-5 w-5" /> },
     { path: "/support", label: "Support", icon: <HeadphonesIcon className="mr-3 h-5 w-5" /> },
     { path: "/settings", label: "Settings", icon: <Settings className="mr-3 h-5 w-5" /> }
   ];

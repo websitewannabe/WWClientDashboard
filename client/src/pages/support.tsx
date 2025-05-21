@@ -131,8 +131,33 @@ export default function Support() {
     enabled: isAuthenticated,
   });
 
+  const { data: intercomTickets, isLoading: intercomLoading } = useQuery({
+    queryKey: ["/api/tickets/intercom"],
+    enabled: isAuthenticated,
+  });
+
   // Use dummy data until real data is available
-  const displayTickets = tickets || ticketsData;
+  const displayTickets: Ticket[] = (tickets as Ticket[]) || ticketsData;
+  
+  // Add source tag to regular tickets
+  const ticketsWithSource = displayTickets.map(ticket => ({
+    ...ticket,
+    source: 'internal'
+  }));
+  
+  // Process Intercom tickets if available
+  const processedIntercomTickets = intercomTickets 
+    ? (intercomTickets as Ticket[]).map(ticket => ({
+        ...ticket,
+        source: 'intercom'
+      }))
+    : [];
+  
+  // Combine all tickets
+  const allTickets: (Ticket & { source?: string })[] = [
+    ...ticketsWithSource,
+    ...processedIntercomTickets
+  ];
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -162,7 +187,7 @@ export default function Support() {
     }
   };
 
-  const filteredTickets = displayTickets.filter(ticket => {
+  const filteredTickets = allTickets.filter(ticket => {
     let statusMatch = true;
     if (activeTab !== 'all') {
       statusMatch = ticket.status === activeTab;
@@ -260,7 +285,17 @@ export default function Support() {
                         filteredTickets.map((ticket) => (
                           <tr key={ticket.id} className="hover:bg-slate-50 cursor-pointer">
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
-                              {ticket.ticketId}
+                              <div className="flex items-center">
+                                <span>{ticket.ticketId}</span>
+                                {'source' in ticket && ticket.source === 'intercom' && (
+                                  <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800" title="This ticket is from Intercom">
+                                    <svg className="w-3 h-3 mr-1" viewBox="0 0 128 128" fill="currentColor">
+                                      <path d="M52.1,88.9c0-3.7,3-6.7,6.7-6.7s6.7,3,6.7,6.7s-3,6.7-6.7,6.7S52.1,92.6,52.1,88.9 M72.6,88.9c0-3.7,3-6.7,6.7-6.7 c3.7,0,6.7,3,6.7,6.7s-3,6.7-6.7,6.7C75.6,95.6,72.6,92.6,72.6,88.9 M62.4,39.5c8.9,0,17.3,3.2,23.8,9.1s10.1,13.6,10.1,22.3h-10.3 c0-13.4-10.7-24.2-23.7-24.2S38.6,57.5,38.6,70.9H28.3C28.3,61.9,31.8,52,38.3,45.2C45.1,38,53.5,39.5,62.4,39.5 M31.6,88.9 c0-3.7,3-6.7,6.7-6.7s6.7,3,6.7,6.7s-3,6.7-6.7,6.7S31.6,92.6,31.6,88.9"/>
+                                    </svg>
+                                    Intercom
+                                  </span>
+                                )}
+                              </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
                               {ticket.subject}

@@ -104,8 +104,10 @@ const invoicesData: Invoice[] = [
 ];
 
 export default function Invoices() {
-  const [filter, setFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [advancedFilters, setAdvancedFilters] = useState<any[]>([]);
   const { isAuthenticated } = useAuth();
 
   const { data: invoices, isLoading } = useQuery({
@@ -116,9 +118,55 @@ export default function Invoices() {
   // Use dummy data until real data is available
   const displayInvoices: Invoice[] = (invoices as Invoice[]) || invoicesData;
 
-  const filteredInvoices = filter === 'all' 
+  // Apply status filter
+  const statusFiltered = statusFilter === 'all' 
     ? displayInvoices 
-    : displayInvoices.filter((invoice: Invoice) => invoice.status === filter);
+    : displayInvoices.filter((invoice: Invoice) => invoice.status === statusFilter);
+  
+  // Apply search filter
+  const searchFiltered = searchTerm
+    ? statusFiltered.filter((invoice: Invoice) => 
+        invoice.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        invoice.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        formatCurrency(invoice.amount).includes(searchTerm)
+      )
+    : statusFiltered;
+  
+  // Apply advanced filters
+  const filteredInvoices = advancedFilters.length > 0
+    ? applyAdvancedFilters(searchFiltered, advancedFilters)
+    : searchFiltered;
+  
+  // Function to apply advanced filters
+  function applyAdvancedFilters(invoices: Invoice[], filters: any[]): Invoice[] {
+    return invoices.filter(invoice => {
+      return filters.every(filter => {
+        const value = invoice[filter.field as keyof Invoice];
+        
+        switch (filter.operator) {
+          case 'equals':
+            return value === filter.value;
+          case 'contains':
+            return String(value).toLowerCase().includes(String(filter.value).toLowerCase());
+          case 'greater than':
+            return typeof value === 'number' && value > Number(filter.value);
+          case 'less than':
+            return typeof value === 'number' && value < Number(filter.value);
+          case 'before':
+            return new Date(String(value)) < new Date(String(filter.value));
+          case 'after':
+            return new Date(String(value)) > new Date(String(filter.value));
+          default:
+            return true;
+        }
+      });
+    });
+  }
+  
+  // Handle advanced filter changes
+  const handleFilterChange = (filters: any[]) => {
+    setAdvancedFilters(filters);
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {

@@ -2,14 +2,17 @@ import PageHeader from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Filter, Download, Eye, Calendar } from "lucide-react";
+import { Filter, Download, Eye, Calendar, HelpCircle, Info } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import InvoicePDFModal from "@/components/invoices/invoice-pdf-modal";
 import InvoiceDetailModal from "@/components/invoices/invoice-detail-modal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import HelpTooltip from "@/components/ui/help-tooltip";
+import { useTour, tourDefinitions } from "@/components/tour/tour-provider";
 
 interface Invoice {
   id: string;
@@ -110,6 +113,19 @@ export default function Invoices() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [dateRange, setDateRange] = useState<{start: Date | null, end: Date | null}>({start: null, end: null});
   const { isAuthenticated } = useAuth();
+  const { startTour, isTourCompleted } = useTour();
+  
+  // Start the tour for first-time visitors
+  useEffect(() => {
+    const invoicesTour = tourDefinitions.find(tour => tour.id === 'invoices-tour');
+    if (invoicesTour && !isTourCompleted('invoices-tour')) {
+      // Small delay to ensure page elements are fully rendered
+      const timer = setTimeout(() => {
+        startTour(invoicesTour);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [startTour, isTourCompleted]);
 
   const { data: invoices, isLoading } = useQuery({
     queryKey: ["/api/invoices"],

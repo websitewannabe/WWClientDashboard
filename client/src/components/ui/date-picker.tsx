@@ -44,8 +44,8 @@ export function DatePicker({
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
-          selected={selected || undefined}
-          onSelect={(date) => onSelect(date)}
+          selected={selected}
+          onSelect={(date) => onSelect(date || null)}
           initialFocus
         />
       </PopoverContent>

@@ -107,7 +107,6 @@ export default function Invoices() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [advancedFilters, setAdvancedFilters] = useState<any[]>([]);
   const { isAuthenticated } = useAuth();
 
   const { data: invoices, isLoading } = useQuery({
@@ -118,55 +117,19 @@ export default function Invoices() {
   // Use dummy data until real data is available
   const displayInvoices: Invoice[] = (invoices as Invoice[]) || invoicesData;
 
-  // Apply status filter
-  const statusFiltered = statusFilter === 'all' 
+  // Filter invoices by status
+  const filteredInvoices = statusFilter === 'all' 
     ? displayInvoices 
     : displayInvoices.filter((invoice: Invoice) => invoice.status === statusFilter);
   
-  // Apply search filter
-  const searchFiltered = searchTerm
-    ? statusFiltered.filter((invoice: Invoice) => 
+  // Search functionality
+  const searchFilteredInvoices = searchTerm 
+    ? filteredInvoices.filter(invoice => 
         invoice.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
         invoice.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         formatCurrency(invoice.amount).includes(searchTerm)
       )
-    : statusFiltered;
-  
-  // Apply advanced filters
-  const filteredInvoices = advancedFilters.length > 0
-    ? applyAdvancedFilters(searchFiltered, advancedFilters)
-    : searchFiltered;
-  
-  // Function to apply advanced filters
-  function applyAdvancedFilters(invoices: Invoice[], filters: any[]): Invoice[] {
-    return invoices.filter(invoice => {
-      return filters.every(filter => {
-        const value = invoice[filter.field as keyof Invoice];
-        
-        switch (filter.operator) {
-          case 'equals':
-            return value === filter.value;
-          case 'contains':
-            return String(value).toLowerCase().includes(String(filter.value).toLowerCase());
-          case 'greater than':
-            return typeof value === 'number' && value > Number(filter.value);
-          case 'less than':
-            return typeof value === 'number' && value < Number(filter.value);
-          case 'before':
-            return new Date(String(value)) < new Date(String(filter.value));
-          case 'after':
-            return new Date(String(value)) > new Date(String(filter.value));
-          default:
-            return true;
-        }
-      });
-    });
-  }
-  
-  // Handle advanced filter changes
-  const handleFilterChange = (filters: any[]) => {
-    setAdvancedFilters(filters);
-  };
+    : filteredInvoices;
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -202,29 +165,29 @@ export default function Invoices() {
             <div className="flex space-x-3">
               <Button 
                 variant="outline" 
-                className={`${filter === 'all' ? 'bg-primary-50 text-primary-700' : ''}`}
-                onClick={() => setFilter('all')}
+                className={`${statusFilter === 'all' ? 'bg-primary-50 text-primary-700' : ''}`}
+                onClick={() => setStatusFilter('all')}
               >
                 All
               </Button>
               <Button 
                 variant="outline" 
-                className={`${filter === 'pending' ? 'bg-primary-50 text-primary-700' : ''}`}
-                onClick={() => setFilter('pending')}
+                className={`${statusFilter === 'pending' ? 'bg-primary-50 text-primary-700' : ''}`}
+                onClick={() => setStatusFilter('pending')}
               >
                 Pending
               </Button>
               <Button 
                 variant="outline" 
-                className={`${filter === 'paid' ? 'bg-primary-50 text-primary-700' : ''}`}
-                onClick={() => setFilter('paid')}
+                className={`${statusFilter === 'paid' ? 'bg-primary-50 text-primary-700' : ''}`}
+                onClick={() => setStatusFilter('paid')}
               >
                 Paid
               </Button>
               <Button 
                 variant="outline" 
-                className={`${filter === 'overdue' ? 'bg-primary-50 text-primary-700' : ''}`}
-                onClick={() => setFilter('overdue')}
+                className={`${statusFilter === 'overdue' ? 'bg-primary-50 text-primary-700' : ''}`}
+                onClick={() => setStatusFilter('overdue')}
               >
                 Overdue
               </Button>

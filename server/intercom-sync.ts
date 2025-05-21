@@ -35,7 +35,8 @@ export async function syncIntercomContactsToUsers(): Promise<{
 
     // Process contacts in batches
     while (hasMore) {
-      const response = await axios.get(
+      let response: any;
+      response = await axios.get(
         'https://api.intercom.io/contacts',
         {
           headers: {

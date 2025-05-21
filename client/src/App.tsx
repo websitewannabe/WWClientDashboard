@@ -21,6 +21,7 @@ import Team from "@/pages/team";
 import AdminDashboard from "@/pages/admin";
 import ClientDetailPage from "@/pages/admin/client-detail";
 import AddClientPage from "@/pages/admin/add-client";
+import ImportContacts from "@/pages/admin/import-contacts";
 import Sidebar from "@/components/layout/sidebar";
 import MobileNav from "@/components/layout/mobile-nav";
 import Header from "@/components/layout/header";
@@ -59,6 +60,7 @@ function Router() {
             <Route path="/admin" component={AdminDashboard} />
             <Route path="/admin/client-detail" component={ClientDetailPage} />
             <Route path="/admin/add-client" component={AddClientPage} />
+            <Route path="/admin/import-contacts" component={ImportContacts} />
             <Route component={NotFound} />
           </Switch>
         </main>

@@ -3,7 +3,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ArrowDownIcon, ArrowUpIcon, Calendar, Loader2, AlertCircle, ExternalLink } from "lucide-react";
+import { 
+  ArrowDownIcon, 
+  ArrowUpIcon, 
+  Calendar, 
+  Loader2, 
+  AlertCircle, 
+  ExternalLink,
+  ChevronDown
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { 
   AreaChart, 
@@ -27,6 +35,12 @@ import { formatNumber } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { initGA, trackEvent } from "@/lib/analytics";
 import { AnalyticsPageSkeleton, StatCardSkeleton, ChartSkeleton } from "@/components/ui/skeleton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // This will be replaced by data from API
 const trafficData = [
@@ -144,6 +158,7 @@ const formatTime = (seconds: number) => {
 
 export default function Analytics() {
   const [timeframe, setTimeframe] = useState<string>("last30days");
+  const [dataSource, setDataSource] = useState<string>("google-analytics");
   const { isAuthenticated, user } = useAuth();
   
   // Initialize Google Analytics on component mount

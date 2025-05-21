@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { InvoicePDFViewer, InvoicePDFProps } from './invoice-pdf-template';
 import { Loader2, Download, Printer, X } from 'lucide-react';
@@ -70,7 +70,10 @@ const InvoicePDFModal: React.FC<InvoicePDFModalProps> = ({ invoice, trigger }) =
       </DialogTrigger>
       <DialogContent className="max-w-screen-lg w-full h-[80vh] max-h-[800px]">
         <DialogHeader className="flex flex-row items-center justify-between">
-          <DialogTitle>Invoice {invoice.invoiceNumber}</DialogTitle>
+          <div>
+            <DialogTitle>Invoice {invoice.invoiceNumber}</DialogTitle>
+            <DialogDescription>Preview, print or download your invoice as PDF</DialogDescription>
+          </div>
           <div className="flex gap-2">
             <Button
               variant="outline"

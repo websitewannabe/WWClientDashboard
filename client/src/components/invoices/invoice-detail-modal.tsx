@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { X, Download, Calendar, User, FileText } from "lucide-react";
@@ -54,12 +54,12 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({ invoice, trigge
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader className="flex flex-row items-center justify-between">
-          <DialogTitle>Invoice {invoice.invoiceNumber}</DialogTitle>
-          <div className="flex items-center space-x-2">
+          <div>
+            <DialogTitle>Invoice {invoice.invoiceNumber}</DialogTitle>
+            <DialogDescription>View invoice details and download options</DialogDescription>
+          </div>
+          <div className="flex items-center">
             {getStatusBadge(invoice.status)}
-            <Button variant="ghost" size="icon">
-              <X className="h-4 w-4" />
-            </Button>
           </div>
         </DialogHeader>
         

@@ -281,13 +281,17 @@ export default function AdminDashboard() {
               <Filter className="h-4 w-4 mr-2" />
               Filters
             </Button>
-            <Button as="a" href="/admin/add-client" className="inline-flex">
-              <Users className="h-4 w-4 mr-2" />
-              Add New Client
+            <Button asChild className="inline-flex">
+              <a href="/admin/add-client">
+                <Users className="h-4 w-4 mr-2" />
+                Add New Client
+              </a>
             </Button>
-            <Button as="a" href="/admin/import-contacts" variant="outline" className="inline-flex">
-              <Mail className="h-4 w-4 mr-2" />
-              Import Intercom Contacts
+            <Button asChild variant="outline" className="inline-flex">
+              <a href="/admin/import-contacts">
+                <Mail className="h-4 w-4 mr-2" />
+                Import Intercom Contacts
+              </a>
             </Button>
           </div>
         </div>

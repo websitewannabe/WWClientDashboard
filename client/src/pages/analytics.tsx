@@ -26,6 +26,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { formatNumber } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { initGA, trackEvent } from "@/lib/analytics";
+import { AnalyticsPageSkeleton, StatCardSkeleton, ChartSkeleton } from "@/components/ui/skeleton";
 
 // This will be replaced by data from API
 const trafficData = [
@@ -232,16 +233,9 @@ export default function Analytics() {
     trackEvent('change_analytics_timeframe', 'analytics', value);
   };
   
-  // If both GA and GSC are loading, show loading state
-  if (isLoadingGA && isLoadingSC) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto mb-4" />
-          <p className="text-slate-600">Loading analytics data...</p>
-        </div>
-      </div>
-    );
+  // If Analytics data is loading, show the animated skeleton loading state
+  if (isLoadingGA) {
+    return <AnalyticsPageSkeleton />;
   }
   
   // If both GA and GSC have errors, show general error state

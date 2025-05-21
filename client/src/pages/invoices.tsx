@@ -2,7 +2,7 @@ import PageHeader from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Filter, Download, Eye, Calendar } from "lucide-react";
+import { Filter, Download, Eye, Calendar, Loader2 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import InvoicePDFModal from "@/components/invoices/invoice-pdf-modal";
 import InvoiceDetailModal from "@/components/invoices/invoice-detail-modal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { InvoicePageSkeleton, DataTableSkeleton } from "@/components/ui/skeleton";
 
 interface Invoice {
   id: string;
@@ -290,7 +291,7 @@ export default function Invoices() {
         </div>
 
         {isLoading ? (
-          <div className="p-8 text-center">Loading invoices...</div>
+          <DataTableSkeleton rowCount={8} />
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-slate-200">

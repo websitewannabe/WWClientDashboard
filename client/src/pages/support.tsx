@@ -9,13 +9,15 @@ import {
   Filter,
   ArrowUp,
   ArrowDown,
-  CalendarIcon
+  CalendarIcon,
+  Loader2
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import { formatDate } from "@/lib/utils";
 import { useState } from "react";
+import { SupportPageSkeleton, TableRowSkeleton } from "@/components/ui/skeleton";
 
 interface Ticket {
   id: string;

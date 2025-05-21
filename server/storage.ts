@@ -32,7 +32,7 @@ export interface IStorage {
     gaViewId?: string;
     gscSiteUrl?: string;
     gscVerificationMethod?: string;
-    gscVerified?: boolean;
+    gscVerified?: string;
   }): Promise<User>;
   
   // Client portal operations

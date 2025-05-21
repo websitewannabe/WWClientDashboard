@@ -6,6 +6,7 @@ import { setupAuth, isAuthenticated } from "./replitAuth";
 import { fetchIntercomTickets, getIntercomTicketById } from "./intercom";
 import { syncIntercomContactsToUsers, importIntercomContactByEmail } from "./intercom-sync";
 import { fetchGoogleAnalyticsData } from "./google-analytics";
+import { fetchSearchConsoleData } from "./google-search-console";
 
 export async function registerRoutes(app: Express): Server {
   // Auth middleware
@@ -93,6 +94,38 @@ export async function registerRoutes(app: Express): Server {
     } catch (error) {
       console.error("Error fetching Google Analytics data:", error);
       res.status(500).json({ message: "Failed to fetch analytics data from Google Analytics" });
+    }
+  });
+  
+  // Google Search Console data
+  app.get("/api/analytics/gsc", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const timeframe = req.query.timeframe || 'last30days';
+      
+      // Get the user to fetch their GSC site URL
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Use the client's specific site URL
+      const clientSiteUrl = user.gscSiteUrl;
+      
+      // Check if the client has verified their site in Google Search Console
+      if (!clientSiteUrl || user.gscVerified !== "true") {
+        return res.status(400).json({ 
+          message: "Google Search Console not configured or site not verified",
+          needsSetup: true
+        });
+      }
+      
+      // Fetch search data from Google Search Console using the client's site URL
+      const searchData = await fetchSearchConsoleData(timeframe as string, userId, clientSiteUrl);
+      res.json(searchData);
+    } catch (error) {
+      console.error("Error fetching Google Search Console data:", error);
+      res.status(500).json({ message: "Failed to fetch data from Google Search Console" });
     }
   });
 

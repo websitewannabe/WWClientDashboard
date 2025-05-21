@@ -19,6 +19,9 @@ interface ClientAnalytics {
   gaMeasurementId: string | null;
   gaPropertyId: string | null;
   gaViewId: string | null;
+  gscSiteUrl: string | null;
+  gscVerificationMethod: string | null;
+  gscVerified: string | null;
 }
 
 export default function ClientAnalytics() {
@@ -28,6 +31,9 @@ export default function ClientAnalytics() {
   const [gaMeasurementId, setGaMeasurementId] = useState('');
   const [gaPropertyId, setGaPropertyId] = useState('');
   const [gaViewId, setGaViewId] = useState('');
+  const [gscSiteUrl, setGscSiteUrl] = useState('');
+  const [gscVerificationMethod, setGscVerificationMethod] = useState('DNS');
+  const [gscVerified, setGscVerified] = useState('false');
   const [isSaving, setIsSaving] = useState(false);
 
   // Fetch all clients
@@ -42,10 +48,16 @@ export default function ClientAnalytics() {
       setGaMeasurementId(selectedClient.gaMeasurementId || '');
       setGaPropertyId(selectedClient.gaPropertyId || '');
       setGaViewId(selectedClient.gaViewId || '');
+      setGscSiteUrl(selectedClient.gscSiteUrl || '');
+      setGscVerificationMethod(selectedClient.gscVerificationMethod || 'DNS');
+      setGscVerified(selectedClient.gscVerified || 'false');
     } else {
       setGaMeasurementId('');
       setGaPropertyId('');
       setGaViewId('');
+      setGscSiteUrl('');
+      setGscVerificationMethod('DNS');
+      setGscVerified('false');
     }
   }, [selectedClient]);
 
@@ -70,7 +82,10 @@ export default function ClientAnalytics() {
       const response = await apiRequest('PATCH', `/api/admin/clients/${selectedClient.id}/analytics`, {
         gaMeasurementId,
         gaPropertyId,
-        gaViewId
+        gaViewId,
+        gscSiteUrl,
+        gscVerificationMethod,
+        gscVerified
       });
 
       if (!response.ok) {
@@ -235,53 +250,117 @@ export default function ClientAnalytics() {
                   </AlertDescription>
                 </Alert>
 
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="gaMeasurementId" className="block text-sm font-medium text-slate-700 mb-1">
-                      GA4 Measurement ID
-                    </label>
-                    <Input
-                      id="gaMeasurementId"
-                      value={gaMeasurementId}
-                      onChange={(e) => setGaMeasurementId(e.target.value)}
-                      placeholder="G-XXXXXXXXXX"
-                      className="w-full"
-                    />
-                    <p className="mt-1 text-xs text-slate-500">
-                      This ID starts with "G-" and can be found in GA4 Admin &gt; Data Streams
-                    </p>
+                <div className="space-y-6">
+                  <div className="border-b border-gray-200 pb-5 mb-5">
+                    <h3 className="text-lg font-medium text-gray-900 mb-1">Google Analytics Settings</h3>
+                    <p className="text-xs text-gray-500">Configure Google Analytics 4 for website traffic statistics</p>
+                  </div>
+                
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="gaMeasurementId" className="block text-sm font-medium text-slate-700 mb-1">
+                        GA4 Measurement ID
+                      </label>
+                      <Input
+                        id="gaMeasurementId"
+                        value={gaMeasurementId}
+                        onChange={(e) => setGaMeasurementId(e.target.value)}
+                        placeholder="G-XXXXXXXXXX"
+                        className="w-full"
+                      />
+                      <p className="mt-1 text-xs text-slate-500">
+                        This ID starts with "G-" and can be found in GA4 Admin &gt; Data Streams
+                      </p>
+                    </div>
+
+                    <div>
+                      <label htmlFor="gaPropertyId" className="block text-sm font-medium text-slate-700 mb-1">
+                        GA4 Property ID
+                      </label>
+                      <Input
+                        id="gaPropertyId"
+                        value={gaPropertyId}
+                        onChange={(e) => setGaPropertyId(e.target.value)}
+                        placeholder="123456789"
+                        className="w-full"
+                      />
+                      <p className="mt-1 text-xs text-slate-500">
+                        The numeric Property ID found in GA4 Admin &gt; Property Settings
+                      </p>
+                    </div>
+
+                    <div>
+                      <label htmlFor="gaViewId" className="block text-sm font-medium text-slate-700 mb-1">
+                        GA4 View ID (optional)
+                      </label>
+                      <Input
+                        id="gaViewId"
+                        value={gaViewId}
+                        onChange={(e) => setGaViewId(e.target.value)}
+                        placeholder="987654321"
+                        className="w-full"
+                      />
+                      <p className="mt-1 text-xs text-slate-500">
+                        The View ID if using a specific view within the property
+                      </p>
+                    </div>
                   </div>
 
-                  <div>
-                    <label htmlFor="gaPropertyId" className="block text-sm font-medium text-slate-700 mb-1">
-                      GA4 Property ID
-                    </label>
-                    <Input
-                      id="gaPropertyId"
-                      value={gaPropertyId}
-                      onChange={(e) => setGaPropertyId(e.target.value)}
-                      placeholder="123456789"
-                      className="w-full"
-                    />
-                    <p className="mt-1 text-xs text-slate-500">
-                      The numeric Property ID found in GA4 Admin &gt; Property Settings
-                    </p>
+                  <div className="border-b border-gray-200 pb-5 mb-5 mt-8">
+                    <h3 className="text-lg font-medium text-gray-900 mb-1">Google Search Console Settings</h3>
+                    <p className="text-xs text-gray-500">Configure Google Search Console for SEO and search performance</p>
                   </div>
 
-                  <div>
-                    <label htmlFor="gaViewId" className="block text-sm font-medium text-slate-700 mb-1">
-                      GA4 View ID (optional)
-                    </label>
-                    <Input
-                      id="gaViewId"
-                      value={gaViewId}
-                      onChange={(e) => setGaViewId(e.target.value)}
-                      placeholder="987654321"
-                      className="w-full"
-                    />
-                    <p className="mt-1 text-xs text-slate-500">
-                      The View ID if using a specific view within the property
-                    </p>
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="gscSiteUrl" className="block text-sm font-medium text-slate-700 mb-1">
+                        Website URL in Search Console
+                      </label>
+                      <Input
+                        id="gscSiteUrl"
+                        value={gscSiteUrl}
+                        onChange={(e) => setGscSiteUrl(e.target.value)}
+                        placeholder="https://example.com"
+                        className="w-full"
+                      />
+                      <p className="mt-1 text-xs text-slate-500">
+                        The full URL of the client's website as registered in Search Console
+                      </p>
+                    </div>
+
+                    <div>
+                      <label htmlFor="gscVerificationMethod" className="block text-sm font-medium text-slate-700 mb-1">
+                        Verification Method
+                      </label>
+                      <select
+                        id="gscVerificationMethod"
+                        value={gscVerificationMethod}
+                        onChange={(e) => setGscVerificationMethod(e.target.value)}
+                        className="w-full h-10 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="DNS">DNS Record</option>
+                        <option value="HTML_FILE">HTML File</option>
+                        <option value="HTML_TAG">HTML Meta Tag</option>
+                        <option value="ANALYTICS">Google Analytics</option>
+                        <option value="TAG_MANAGER">Google Tag Manager</option>
+                      </select>
+                      <p className="mt-1 text-xs text-slate-500">
+                        The method used to verify ownership of the site in Search Console
+                      </p>
+                    </div>
+
+                    <div className="flex items-center mt-4">
+                      <input
+                        type="checkbox"
+                        id="gscVerified"
+                        checked={gscVerified === "true"}
+                        onChange={(e) => setGscVerified(e.target.checked ? "true" : "false")}
+                        className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <label htmlFor="gscVerified" className="ml-2 block text-sm text-gray-900">
+                        Site verified in Search Console
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>

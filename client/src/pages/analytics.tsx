@@ -248,6 +248,12 @@ export default function Analytics() {
     trackEvent('change_analytics_timeframe', 'analytics', value);
   };
   
+  // Handler for data source change
+  const handleDataSourceChange = (value: string) => {
+    setDataSource(value);
+    trackEvent('change_analytics_source', 'analytics', value);
+  };
+  
   // If Analytics data is loading, show the animated skeleton loading state
   if (isLoadingGA) {
     return <AnalyticsPageSkeleton />;
@@ -323,8 +329,32 @@ export default function Analytics() {
 
       <div className="mb-6">
         <Card>
-          <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-            <h3 className="text-lg font-medium leading-6 text-slate-900">Website Traffic</h3>
+          <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center flex-wrap gap-4">
+            <div className="flex items-center space-x-4">
+              <h3 className="text-lg font-medium leading-6 text-slate-900">Website Analytics</h3>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    {dataSource === "google-analytics" && "Google Analytics"}
+                    {dataSource === "google-search-console" && "Google Search Console"}
+                    {dataSource === "google-business-profile" && "Google Business Profile"}
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onClick={() => handleDataSourceChange("google-analytics")}>
+                    Google Analytics
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleDataSourceChange("google-search-console")}>
+                    Google Search Console
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleDataSourceChange("google-business-profile")}>
+                    Google Business Profile
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            
             <Tabs defaultValue={timeframe} onValueChange={handleTimeframeChange}>
               <TabsList>
                 <TabsTrigger value="last7days">Last 7 Days</TabsTrigger>

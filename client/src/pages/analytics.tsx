@@ -159,8 +159,19 @@ const formatTime = (seconds: number) => {
 
 export default function Analytics() {
   const [timeframe, setTimeframe] = useState<string>("last30days");
-  const [dataSource, setDataSource] = useState<string>("google-analytics");
   const { isAuthenticated, user } = useAuth();
+  const [location] = useLocation();
+  
+  // Determine which data source to show based on the URL path
+  const dataSource = useMemo(() => {
+    if (location === "/analytics/search-console") {
+      return "google-search-console";
+    } else if (location === "/analytics/business-profile") {
+      return "google-business-profile";
+    } else {
+      return "google-analytics";
+    }
+  }, [location]);
   
   // Initialize Google Analytics on component mount
   useEffect(() => {
@@ -255,13 +266,20 @@ export default function Analytics() {
     trackEvent('change_analytics_source', 'analytics', value);
   };
   
-  // If Analytics data is loading, show the animated skeleton loading state
-  if (isLoadingGA) {
+  // Determine which loading state to show based on the current route
+  if (dataSource === "google-analytics" && isLoadingGA) {
+    return <AnalyticsPageSkeleton />;
+  } else if (dataSource === "google-search-console" && isLoadingSC) {
+    return <AnalyticsPageSkeleton />;
+  } else if (dataSource === "google-business-profile") {
+    // For now, we don't have a specific loading state for business profile
     return <AnalyticsPageSkeleton />;
   }
   
-  // If both GA and GSC have errors, show general error state
-  if (errorGA && errorSC) {
+  // Show appropriate error state based on the current route
+  if ((dataSource === "google-analytics" && errorGA) ||
+      (dataSource === "google-search-console" && errorSC) ||
+      (dataSource === "google-business-profile")) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center max-w-md">

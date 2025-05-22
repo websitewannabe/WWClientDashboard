@@ -3,6 +3,11 @@ import { Link, useLocation } from "wouter";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { 
   LayoutDashboard, 
   FileText, 
@@ -20,8 +25,13 @@ import {
   Shield,
   Users,
   Menu,
-  X
+  X,
+  ChevronDown,
+  ChevronRight,
+  LineChart,
+  Building
 } from "lucide-react";
+import { useState } from "react";
 import type { User } from "@shared/schema";
 
 interface SidebarProps {
@@ -32,6 +42,12 @@ interface SidebarProps {
 export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) {
   const [location] = useLocation();
   const { user, isAuthenticated } = useAuth();
+  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+  
+  // Check if the current location is any of the analytics pages
+  const isAnalyticsActive = location === "/analytics" || 
+                            location === "/analytics/search-console" || 
+                            location === "/analytics/business-profile";
 
   const navItems = [
     { path: "/", label: "Dashboard", icon: <LayoutDashboard className="mr-3 h-5 w-5" /> },
@@ -39,16 +55,23 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     { path: "/projects", label: "Projects", icon: <FolderKanban className="mr-3 h-5 w-5" /> },
     { path: "/hosting", label: "Hosting", icon: <Server className="mr-3 h-5 w-5" /> },
     { path: "/domains", label: "Domains", icon: <Globe className="mr-3 h-5 w-5" /> },
-    { path: "/analytics", label: "Analytics", icon: <BarChart className="mr-3 h-5 w-5" /> },
+    // Analytics is handled separately with submenu
     { path: "/seo", label: "SEO Reports", icon: <Search className="mr-3 h-5 w-5" /> },
     { path: "/content", label: "Content Calendar", icon: <CalendarDays className="mr-3 h-5 w-5" /> },
     { path: "/resources", label: "Resources", icon: <Paperclip className="mr-3 h-5 w-5" /> },
-    { path: "/products", label: "Products", icon: <CreditCard className="mr-3 h-5 w-5" /> },
+    { path: "/products", label: "Products", icon: <Package className="mr-3 h-5 w-5" /> },
     { path: "/payments", label: "Payments", icon: <CreditCard className="mr-3 h-5 w-5" /> },
     { path: "/team", label: "Team", icon: <Users className="mr-3 h-5 w-5" /> },
     { path: "/support", label: "Support", icon: <HeadphonesIcon className="mr-3 h-5 w-5" /> },
     { path: "/settings", label: "Settings", icon: <Settings className="mr-3 h-5 w-5" /> },
-    { path: "/admin", label: "Admin Portal", icon: <Users className="mr-3 h-5 w-5" /> }
+    { path: "/admin", label: "Admin Portal", icon: <Shield className="mr-3 h-5 w-5" /> }
+  ];
+  
+  // Analytics submenu items
+  const analyticsSubItems = [
+    { path: "/analytics", label: "Google Analytics", icon: <BarChart className="h-5 w-5" /> },
+    { path: "/analytics/search-console", label: "Google Search Console", icon: <LineChart className="h-5 w-5" /> },
+    { path: "/analytics/business-profile", label: "Google Business Profile", icon: <Building className="h-5 w-5" /> }
   ];
 
   // Mobile sidebar using Sheet component

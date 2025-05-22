@@ -1,29 +1,22 @@
+import { useState, useEffect } from "react";
+import { useAuth } from "@/hooks/use-auth";
 import PageHeader from "@/components/layout/page-header";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { initGA, trackEvent } from "@/lib/analytics";
 import { 
-  ArrowDownIcon, 
   ArrowUpIcon, 
-  Calendar, 
+  ArrowDownIcon,
   Loader2, 
-  AlertCircle, 
-  ExternalLink,
-  ChevronDown
+  AlertCircle
 } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
-import { useLocation } from "wouter";
 import { 
-  AreaChart, 
-  Area, 
-  BarChart, 
-  Bar,
   LineChart,
   Line,
-  PieChart, 
-  Pie,
-  Cell,
+  BarChart,
+  Bar,
   XAxis, 
   YAxis, 
   CartesianGrid, 
@@ -31,114 +24,25 @@ import {
   Legend, 
   ResponsiveContainer 
 } from "recharts";
-import { useAuth } from "@/hooks/use-auth";
-import { formatNumber } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
-import { initGA, trackEvent } from "@/lib/analytics";
-import { AnalyticsPageSkeleton, StatCardSkeleton, ChartSkeleton } from "@/components/ui/skeleton";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
-// This will be replaced by data from API
-const trafficData = [
-  { date: 'Jan', pageViews: 4000, visitors: 2400, sessions: 2900 },
-  { date: 'Feb', pageViews: 3000, visitors: 1398, sessions: 2500 },
-  { date: 'Mar', pageViews: 2000, visitors: 9800, sessions: 2100 },
-  { date: 'Apr', pageViews: 2780, visitors: 3908, sessions: 2700 },
-  { date: 'May', pageViews: 5890, visitors: 4800, sessions: 3800 },
-  { date: 'Jun', pageViews: 4390, visitors: 3800, sessions: 2500 },
-  { date: 'Jul', pageViews: 3490, visitors: 4300, sessions: 3100 },
-  { date: 'Aug', pageViews: 4000, visitors: 2400, sessions: 3200 },
-  { date: 'Sep', pageViews: 8900, visitors: 5200, sessions: 5500 },
-  { date: 'Oct', pageViews: 9821, visitors: 4238, sessions: 6100 },
-  { date: 'Nov', pageViews: 7500, visitors: 3500, sessions: 4800 },
-  { date: 'Dec', pageViews: 6500, visitors: 3100, sessions: 4100 },
+// Sample data for website analytics
+const websiteData = [
+  { date: 'Jan 01', clicks: 210, impressions: 5200, position: 8.7 },
+  { date: 'Jan 02', clicks: 230, impressions: 5400, position: 8.5 },
+  { date: 'Jan 03', clicks: 250, impressions: 5800, position: 8.3 },
+  { date: 'Jan 04', clicks: 280, impressions: 6200, position: 8.1 },
+  { date: 'Jan 05', clicks: 310, impressions: 7000, position: 7.9 },
+  { date: 'Jan 06', clicks: 290, impressions: 6800, position: 7.8 },
+  { date: 'Jan 07', clicks: 250, impressions: 6500, position: 7.8 },
 ];
 
-const sourceData = [
-  { name: 'Direct', value: 32 },
-  { name: 'Search', value: 38 },
-  { name: 'Social', value: 18 },
-  { name: 'Referral', value: 12 },
+const topKeywords = [
+  { keyword: "website design", clicks: 345, impressions: 12450, ctr: 2.77, position: 8.2 },
+  { keyword: "website builder", clicks: 289, impressions: 9870, ctr: 2.93, position: 9.5 },
+  { keyword: "ecommerce website", clicks: 216, impressions: 5680, ctr: 3.80, position: 7.8 },
+  { keyword: "responsive design", clicks: 178, impressions: 4325, ctr: 4.12, position: 6.3 },
+  { keyword: "business website cost", clicks: 156, impressions: 3980, ctr: 3.92, position: 5.7 }
 ];
-
-const deviceData = [
-  { name: 'Desktop', value: 63 },
-  { name: 'Mobile', value: 32 },
-  { name: 'Tablet', value: 5 },
-];
-
-const pageData = [
-  { name: 'Home', views: 3621, visitors: 2840 },
-  { name: 'About', views: 2573, visitors: 2103 },
-  { name: 'Services', views: 1876, visitors: 1580 },
-  { name: 'Blog', views: 1253, visitors: 1021 },
-  { name: 'Contact', views: 983, visitors: 915 },
-];
-
-const metricCards = [
-  { name: 'Page Views', value: 9821, change: '+12.2%', changeType: 'positive' },
-  { name: 'Unique Visitors', value: 4238, change: '+8.7%', changeType: 'positive' },
-  { name: 'Avg. Time on Page', value: '2m 42s', change: '-3.1%', changeType: 'negative' },
-  { name: 'Bounce Rate', value: '42.3%', change: '-1.8%', changeType: 'positive' },
-  { name: 'Pages / Session', value: '3.5', change: '+0.5%', changeType: 'positive' },
-  { name: 'New vs Returning', value: '68% / 32%', change: '+2.3%', changeType: 'positive' },
-];
-
-const COLORS = ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444'];
-
-// Interface to match the response from our Google Analytics API
-interface AnalyticsData {
-  dates: string[];
-  pageViews: number[];
-  visitors: number[];
-  sessions: number[];
-  totals: {
-    pageViews: number;
-    visitors: number;
-    sessions: number;
-    bounceRate: number;
-    avgSessionDuration: number;
-  };
-}
-
-// Interface to match the response from our Google Search Console API
-interface SearchConsoleData {
-  keywords: {
-    keyword: string;
-    clicks: number;
-    impressions: number;
-    ctr: number;
-    position: number;
-  }[];
-  pages: {
-    url: string;
-    clicks: number;
-    impressions: number;
-    ctr: number;
-    position: number;
-  }[];
-  devices: {
-    device: string;
-    clicks: number;
-    impressions: number;
-  }[];
-  countries: {
-    country: string;
-    clicks: number;
-    impressions: number;
-  }[];
-  totals: {
-    clicks: number;
-    impressions: number;
-    ctr: number;
-    position: number;
-  };
-}
 
 // Helper to format the analytics data for the chart
 const formatAnalyticsForChart = (data: AnalyticsData) => {

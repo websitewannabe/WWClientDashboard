@@ -12,7 +12,8 @@ import {
   ExternalLink,
   ChevronDown
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useLocation } from "wouter";
 import { 
   AreaChart, 
   Area, 

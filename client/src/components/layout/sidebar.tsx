@@ -144,7 +144,71 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
       </div>
       <div className="flex-1 overflow-y-auto py-4">
         <nav className="px-2 space-y-1">
-          {navItems.map((item) => (
+          {/* Regular nav items before Analytics */}
+          {navItems.slice(0, 5).map((item) => (
+            <Link 
+              key={item.path} 
+              href={item.path}
+              className={cn(
+                "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
+                location === item.path
+                  ? "bg-[#FF5722] text-white"
+                  : "text-[#FF5722] hover:bg-white hover:text-black"
+              )}
+            >
+              {item.icon}
+              {item.label}
+            </Link>
+          ))}
+          
+          {/* Analytics Submenu */}
+          <Collapsible 
+            open={isAnalyticsOpen || isAnalyticsActive} 
+            onOpenChange={setIsAnalyticsOpen}
+            className="w-full"
+          >
+            <CollapsibleTrigger className="w-full">
+              <div 
+                className={cn(
+                  "group flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md w-full",
+                  isAnalyticsActive
+                    ? "bg-[#FF5722] text-white"
+                    : "text-[#FF5722] hover:bg-white hover:text-black"
+                )}
+              >
+                <div className="flex items-center">
+                  <BarChart className="mr-3 h-5 w-5" />
+                  Analytics
+                </div>
+                {isAnalyticsOpen || isAnalyticsActive ? (
+                  <ChevronDown className="h-4 w-4" />
+                ) : (
+                  <ChevronRight className="h-4 w-4" />
+                )}
+              </div>
+            </CollapsibleTrigger>
+            
+            <CollapsibleContent className="ml-2 mt-1 space-y-1">
+              {analyticsSubItems.map((item) => (
+                <Link 
+                  key={item.path} 
+                  href={item.path}
+                  className={cn(
+                    "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
+                    location === item.path
+                      ? "bg-[#FF5722] text-white"
+                      : "text-[#FF5722] hover:bg-white hover:text-black"
+                  )}
+                >
+                  <div className="ml-6 mr-3">{item.icon}</div>
+                  {item.label}
+                </Link>
+              ))}
+            </CollapsibleContent>
+          </Collapsible>
+          
+          {/* Regular nav items after Analytics */}
+          {navItems.slice(5).map((item) => (
             <Link 
               key={item.path} 
               href={item.path}

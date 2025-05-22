@@ -56,6 +56,8 @@ function Router() {
             <Route path="/hosting" component={Hosting} />
             <Route path="/domains" component={Domains} />
             <Route path="/analytics" component={Analytics} />
+            <Route path="/analytics/search-console" component={Analytics} />
+            <Route path="/analytics/business-profile" component={Analytics} />
             <Route path="/seo" component={SEOReports} />
             <Route path="/content" component={ContentCalendar} />
             <Route path="/resources" component={Resources} />

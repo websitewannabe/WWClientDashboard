@@ -162,16 +162,8 @@ export default function Analytics() {
   const { isAuthenticated, user } = useAuth();
   const [location] = useLocation();
   
-  // Determine which data source to show based on the URL path
-  const dataSource = useMemo(() => {
-    if (location === "/analytics/search-console") {
-      return "google-search-console";
-    } else if (location === "/analytics/business-profile") {
-      return "google-business-profile";
-    } else {
-      return "google-analytics";
-    }
-  }, [location]);
+  // Set the data source to Search Console
+  const dataSource = "google-search-console";
   
   // Initialize Google Analytics on component mount
   useEffect(() => {
@@ -380,16 +372,9 @@ export default function Analytics() {
       <div className="mb-6">
         <Card>
           <div className="px-6 py-4 border-b border-slate-200 flex flex-col gap-4">
-            <h3 className="text-lg font-medium leading-6 text-slate-900">Website Analytics</h3>
+            <h3 className="text-lg font-medium leading-6 text-slate-900">Search Console</h3>
             
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <Tabs defaultValue={dataSource} onValueChange={handleDataSourceChange} className="w-full sm:w-auto">
-                <TabsList className="w-full sm:w-auto">
-                  <TabsTrigger value="google-analytics">Google Analytics</TabsTrigger>
-                  <TabsTrigger value="google-search-console">Search Console</TabsTrigger>
-                  <TabsTrigger value="google-business-profile">Business Profile</TabsTrigger>
-                </TabsList>
-              </Tabs>
               
               <Tabs defaultValue={timeframe} onValueChange={handleTimeframeChange}>
                 <TabsList>
@@ -401,74 +386,7 @@ export default function Analytics() {
             </div>
           </div>
           <CardContent className="p-6">
-            {dataSource === "google-analytics" && (
-              <div className="space-y-8">
-                <div className="h-[350px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart
-                      data={displayData}
-                      margin={{
-                        top: 10,
-                        right: 30,
-                        left: 0,
-                        bottom: 0,
-                      }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Area 
-                        type="monotone" 
-                        dataKey="pageViews" 
-                        stroke="#3b82f6" 
-                        fill="#3b82f6" 
-                        fillOpacity={0.6} 
-                        name="Page Views"
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="visitors" 
-                        stroke="#22c55e" 
-                        fill="#22c55e" 
-                        fillOpacity={0.6}
-                        name="Unique Visitors" 
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="sessions" 
-                        stroke="#f59e0b" 
-                        fill="#f59e0b" 
-                        fillOpacity={0.6}
-                        name="Sessions" 
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mt-8">
-                  {currentMetricCards.map((metric, index) => (
-                    <div key={index} className="p-4 bg-white border rounded-lg shadow-sm">
-                      <h3 className="text-sm font-medium text-slate-500">{metric.name}</h3>
-                      <p className="mt-2 text-3xl font-semibold text-slate-900">{metric.value}</p>
-                      <div className={`mt-1 flex items-center text-xs ${
-                        metric.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {metric.changeType === 'positive' ? (
-                          <ArrowUpIcon className="mr-1 h-3 w-3" />
-                        ) : (
-                          <ArrowDownIcon className="mr-1 h-3 w-3" />
-                        )}
-                        <span>{metric.change}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {dataSource === "google-search-console" && (
+            {(
               <div className="space-y-8">
                 <div className="h-[350px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
@@ -607,152 +525,7 @@ export default function Analytics() {
               </div>
             )}
             
-            {dataSource === "google-business-profile" && (
-              <div className="space-y-8">
-                <div className="h-[350px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
-                      data={[
-                        { date: 'Jan', views: 3200, searches: 1800, actions: 420 },
-                        { date: 'Feb', views: 3400, searches: 1900, actions: 450 },
-                        { date: 'Mar', views: 3800, searches: 2100, actions: 480 },
-                        { date: 'Apr', views: 4200, searches: 2300, actions: 510 },
-                        { date: 'May', views: 4600, searches: 2500, actions: 550 },
-                        { date: 'Jun', views: 5000, searches: 2700, actions: 600 },
-                        { date: 'Jul', views: 5342, searches: 2870, actions: 689 }
-                      ]}
-                      margin={{
-                        top: 10,
-                        right: 30,
-                        left: 0,
-                        bottom: 0,
-                      }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Line type="monotone" dataKey="views" stroke="#3b82f6" name="Profile Views" />
-                      <Line type="monotone" dataKey="searches" stroke="#22c55e" name="Local Searches" />
-                      <Line type="monotone" dataKey="actions" stroke="#f59e0b" name="Customer Actions" />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="p-4 bg-white border rounded-lg shadow-sm">
-                    <h3 className="text-sm font-medium text-slate-500">Total Views</h3>
-                    <p className="mt-2 text-3xl font-semibold text-slate-900">5,342</p>
-                    <div className="mt-1 flex items-center text-xs text-green-600">
-                      <ArrowUpIcon className="mr-1 h-3 w-3" />
-                      <span>+8.3%</span>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-white border rounded-lg shadow-sm">
-                    <h3 className="text-sm font-medium text-slate-500">Total Searches</h3>
-                    <p className="mt-2 text-3xl font-semibold text-slate-900">2,870</p>
-                    <div className="mt-1 flex items-center text-xs text-green-600">
-                      <ArrowUpIcon className="mr-1 h-3 w-3" />
-                      <span>+12.5%</span>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-white border rounded-lg shadow-sm">
-                    <h3 className="text-sm font-medium text-slate-500">Customer Actions</h3>
-                    <p className="mt-2 text-3xl font-semibold text-slate-900">689</p>
-                    <div className="mt-1 flex items-center text-xs text-green-600">
-                      <ArrowUpIcon className="mr-1 h-3 w-3" />
-                      <span>+5.2%</span>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-white border rounded-lg shadow-sm">
-                    <h3 className="text-sm font-medium text-slate-500">Review Rating</h3>
-                    <p className="mt-2 text-3xl font-semibold text-slate-900">4.8</p>
-                    <div className="mt-1 flex items-center text-xs text-green-600">
-                      <ArrowUpIcon className="mr-1 h-3 w-3" />
-                      <span>+0.2</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Business Profile specific data - Customer actions breakdown */}
-                <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div>
-                    <h3 className="text-lg font-medium mb-4">Customer Actions</h3>
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-slate-200">
-                        <thead className="bg-slate-50">
-                          <tr>
-                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Action Type</th>
-                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Count</th>
-                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Change</th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-slate-200">
-                          <tr>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">Website Clicks</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">312</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+6.8%</td>
-                          </tr>
-                          <tr>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">Direction Requests</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">215</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+4.2%</td>
-                          </tr>
-                          <tr>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">Phone Calls</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">94</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+3.7%</td>
-                          </tr>
-                          <tr>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">Message Requests</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">68</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+9.7%</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-lg font-medium mb-4">Reviews Summary</h3>
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-slate-200">
-                        <thead className="bg-slate-50">
-                          <tr>
-                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Rating</th>
-                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Count</th>
-                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Percentage</th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-slate-200">
-                          <tr>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">5 Star</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">42</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">82%</td>
-                          </tr>
-                          <tr>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">4 Star</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">6</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">12%</td>
-                          </tr>
-                          <tr>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">3 Star</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">2</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">4%</td>
-                          </tr>
-                          <tr>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">2 Star</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">1</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">2%</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </CardContent>
         </Card>
       </div>

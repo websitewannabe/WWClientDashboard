@@ -69,9 +69,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
   
   // Analytics submenu items
   const analyticsSubItems = [
-    { path: "/analytics", label: "Google Analytics", icon: <BarChart className="h-5 w-5" /> },
-    { path: "/analytics/search-console", label: "Google Search Console", icon: <LineChart className="h-5 w-5" /> },
-    { path: "/analytics/business-profile", label: "Google Business Profile", icon: <Building className="h-5 w-5" /> }
+    { path: "/analytics", label: "Search Console", icon: <LineChart className="h-5 w-5" /> }
   ];
 
   // Mobile sidebar using Sheet component

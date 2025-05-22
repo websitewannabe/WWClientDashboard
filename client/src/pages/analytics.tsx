@@ -342,11 +342,38 @@ export default function Analytics() {
     }
   };
   
+  // Determine page title and description based on the data source
+  const getPageTitle = () => {
+    switch (dataSource) {
+      case "google-analytics":
+        return "Google Analytics";
+      case "google-search-console":
+        return "Google Search Console";
+      case "google-business-profile":
+        return "Google Business Profile";
+      default:
+        return "Analytics";
+    }
+  };
+  
+  const getPageDescription = () => {
+    switch (dataSource) {
+      case "google-analytics":
+        return "Monitor your website traffic and user engagement";
+      case "google-search-console":
+        return "Track your search performance and visibility";
+      case "google-business-profile":
+        return "View your business listing metrics and local performance";
+      default:
+        return "Monitor your website's performance";
+    }
+  };
+
   return (
     <>
       <PageHeader 
-        title="Analytics" 
-        description="Monitor your website's performance and user engagement"
+        title={getPageTitle()}
+        description={getPageDescription()}
         onRefresh={() => window.location.reload()}
       />
 
@@ -523,6 +550,60 @@ export default function Analytics() {
                     </div>
                   </div>
                 </div>
+                
+                {/* Search Console specific data - keywords */}
+                <div className="mt-8">
+                  <h3 className="text-lg font-medium mb-4">Top Keywords</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-slate-200">
+                      <thead className="bg-slate-50">
+                        <tr>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Keyword</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Clicks</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Impressions</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Position</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-slate-200">
+                        {demoSearchConsoleData.keywords.map((keyword, index) => (
+                          <tr key={index}>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">{keyword.keyword}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">{keyword.clicks}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">{keyword.impressions}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">{keyword.position.toFixed(1)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                {/* Search Console specific data - pages */}
+                <div className="mt-8">
+                  <h3 className="text-lg font-medium mb-4">Top Pages</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-slate-200">
+                      <thead className="bg-slate-50">
+                        <tr>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">URL</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Clicks</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Impressions</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Position</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-slate-200">
+                        {demoSearchConsoleData.pages.map((page, index) => (
+                          <tr key={index}>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">{page.url}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">{page.clicks}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">{page.impressions}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">{page.position.toFixed(1)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             )}
             
@@ -590,6 +671,83 @@ export default function Analytics() {
                     <div className="mt-1 flex items-center text-xs text-green-600">
                       <ArrowUpIcon className="mr-1 h-3 w-3" />
                       <span>+0.2</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Business Profile specific data - Customer actions breakdown */}
+                <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">Customer Actions</h3>
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-slate-200">
+                        <thead className="bg-slate-50">
+                          <tr>
+                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Action Type</th>
+                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Count</th>
+                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Change</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-slate-200">
+                          <tr>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">Website Clicks</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">312</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+6.8%</td>
+                          </tr>
+                          <tr>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">Direction Requests</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">215</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+4.2%</td>
+                          </tr>
+                          <tr>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">Phone Calls</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">94</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+3.7%</td>
+                          </tr>
+                          <tr>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">Message Requests</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">68</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+9.7%</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">Reviews Summary</h3>
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-slate-200">
+                        <thead className="bg-slate-50">
+                          <tr>
+                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Rating</th>
+                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Count</th>
+                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Percentage</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-slate-200">
+                          <tr>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">5 Star</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">42</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">82%</td>
+                          </tr>
+                          <tr>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">4 Star</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">6</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">12%</td>
+                          </tr>
+                          <tr>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">3 Star</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">2</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">4%</td>
+                          </tr>
+                          <tr>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">2 Star</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">1</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">2%</td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>

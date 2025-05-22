@@ -260,9 +260,17 @@ export default function Analytics() {
     trackEvent('change_analytics_timeframe', 'analytics', value);
   };
   
-  // Handler for data source change
+  // Handler for data source change - now uses navigation instead of state
   const handleDataSourceChange = (value: string) => {
-    setDataSource(value);
+    // Navigate to the appropriate route based on selected data source
+    if (value === "google-analytics") {
+      window.location.href = "/analytics";
+    } else if (value === "google-search-console") {
+      window.location.href = "/analytics/search-console";
+    } else if (value === "google-business-profile") {
+      window.location.href = "/analytics/business-profile";
+    }
+    
     trackEvent('change_analytics_source', 'analytics', value);
   };
   
@@ -271,15 +279,11 @@ export default function Analytics() {
     return <AnalyticsPageSkeleton />;
   } else if (dataSource === "google-search-console" && isLoadingSC) {
     return <AnalyticsPageSkeleton />;
-  } else if (dataSource === "google-business-profile") {
-    // For now, we don't have a specific loading state for business profile
-    return <AnalyticsPageSkeleton />;
   }
   
   // Show appropriate error state based on the current route
   if ((dataSource === "google-analytics" && errorGA) ||
-      (dataSource === "google-search-console" && errorSC) ||
-      (dataSource === "google-business-profile")) {
+      (dataSource === "google-search-console" && errorSC)) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center max-w-md">

@@ -3,11 +3,6 @@ import { Link, useLocation } from "wouter";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { 
   LayoutDashboard, 
   FileText, 
@@ -25,11 +20,7 @@ import {
   Shield,
   Users,
   Menu,
-  X,
-  ChevronDown,
-  ChevronRight,
-  LineChart,
-  Building
+  X
 } from "lucide-react";
 import { useState } from "react";
 import type { User } from "@shared/schema";
@@ -42,12 +33,6 @@ interface SidebarProps {
 export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) {
   const [location] = useLocation();
   const { user, isAuthenticated } = useAuth();
-  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
-  
-  // Check if the current location is any of the analytics pages
-  const isAnalyticsActive = location === "/analytics" || 
-                            location === "/analytics/search-console" || 
-                            location === "/analytics/business-profile";
 
   const navItems = [
     { path: "/", label: "Dashboard", icon: <LayoutDashboard className="mr-3 h-5 w-5" /> },
@@ -55,7 +40,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     { path: "/projects", label: "Projects", icon: <FolderKanban className="mr-3 h-5 w-5" /> },
     { path: "/hosting", label: "Hosting", icon: <Server className="mr-3 h-5 w-5" /> },
     { path: "/domains", label: "Domains", icon: <Globe className="mr-3 h-5 w-5" /> },
-    // Analytics is handled separately with submenu
+    { path: "/analytics", label: "Analytics", icon: <BarChart className="mr-3 h-5 w-5" /> },
     { path: "/seo", label: "SEO Reports", icon: <Search className="mr-3 h-5 w-5" /> },
     { path: "/content", label: "Content Calendar", icon: <CalendarDays className="mr-3 h-5 w-5" /> },
     { path: "/resources", label: "Resources", icon: <Paperclip className="mr-3 h-5 w-5" /> },
@@ -67,11 +52,6 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     { path: "/admin", label: "Admin Portal", icon: <Shield className="mr-3 h-5 w-5" /> }
   ];
   
-  // Analytics submenu items
-  const analyticsSubItems = [
-    { path: "/analytics", label: "Search Console", icon: <LineChart className="h-5 w-5" /> }
-  ];
-
   // Mobile sidebar using Sheet component
   const mobileSidebar = (
     <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
@@ -142,71 +122,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
       </div>
       <div className="flex-1 overflow-y-auto py-4">
         <nav className="px-2 space-y-1">
-          {/* Regular nav items before Analytics */}
-          {navItems.slice(0, 5).map((item) => (
-            <Link 
-              key={item.path} 
-              href={item.path}
-              className={cn(
-                "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
-                location === item.path
-                  ? "bg-[#FF5722] text-white"
-                  : "text-[#FF5722] hover:bg-white hover:text-black"
-              )}
-            >
-              {item.icon}
-              {item.label}
-            </Link>
-          ))}
-          
-          {/* Analytics Submenu */}
-          <Collapsible 
-            open={isAnalyticsOpen || isAnalyticsActive} 
-            onOpenChange={setIsAnalyticsOpen}
-            className="w-full"
-          >
-            <CollapsibleTrigger className="w-full">
-              <div 
-                className={cn(
-                  "group flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md w-full",
-                  isAnalyticsActive
-                    ? "bg-[#FF5722] text-white"
-                    : "text-[#FF5722] hover:bg-white hover:text-black"
-                )}
-              >
-                <div className="flex items-center">
-                  <BarChart className="mr-3 h-5 w-5" />
-                  Analytics
-                </div>
-                {isAnalyticsOpen || isAnalyticsActive ? (
-                  <ChevronDown className="h-4 w-4" />
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
-                )}
-              </div>
-            </CollapsibleTrigger>
-            
-            <CollapsibleContent className="ml-2 mt-1 space-y-1">
-              {analyticsSubItems.map((item) => (
-                <Link 
-                  key={item.path} 
-                  href={item.path}
-                  className={cn(
-                    "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
-                    location === item.path
-                      ? "bg-[#FF5722] text-white"
-                      : "text-[#FF5722] hover:bg-white hover:text-black"
-                  )}
-                >
-                  <div className="ml-6 mr-3">{item.icon}</div>
-                  {item.label}
-                </Link>
-              ))}
-            </CollapsibleContent>
-          </Collapsible>
-          
-          {/* Regular nav items after Analytics */}
-          {navItems.slice(5).map((item) => (
+          {navItems.map((item) => (
             <Link 
               key={item.path} 
               href={item.path}

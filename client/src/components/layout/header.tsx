@@ -44,11 +44,6 @@ export default function Header({ toggleSidebar }: HeaderProps) {
           </Button>
         </div>
         <div className="flex items-center md:flex-1">
-          <img 
-            src="/assets/images/logo_favicon.png" 
-            alt="Company Logo" 
-            className="h-10" 
-          />
           <div className="hidden md:block">
             <h2 className="text-xl font-semibold text-slate-800">{getPageTitle()}</h2>
           </div>

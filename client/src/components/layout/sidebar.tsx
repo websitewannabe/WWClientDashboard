@@ -376,21 +376,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
             </div>
           )}
           
-          {/* Mock user login status */}
-          {!isAuthenticated && !isCollapsed && (
-            <div className="mt-2 px-3">
-              <div 
-                className="flex items-center py-1.5 font-medium rounded-md px-3 w-full cursor-pointer text-[#FF5722] hover:bg-white hover:text-black"
-              >
-                <Avatar className="h-6 w-6 rounded-full border-2 border-gray-200">
-                  <AvatarFallback className="bg-[#FF5722] text-white text-xs">
-                    CT
-                  </AvatarFallback>
-                </Avatar>
-                <span className="ml-3 flex-1 text-[14px]">Chris Tierney</span>
-              </div>
-            </div>
-          )}
+
         </nav>
       </div>
       
@@ -409,14 +395,30 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         </div>
       )}
       
-      {/* User status in collapsed view when not authenticated */}
-      {!isAuthenticated && isCollapsed && (
-        <div className="mt-auto mb-6 flex justify-center">
-          <Avatar className="h-6 w-6 rounded-full border-2 border-gray-200">
-            <AvatarFallback className="bg-[#FF5722] text-white text-xs">
-              CT
-            </AvatarFallback>
-          </Avatar>
+      {/* User status when not authenticated */}
+      {!isAuthenticated && (
+        <div className={cn(
+          "absolute bottom-0 left-0 right-0 border-t border-slate-700",
+          isCollapsed ? "flex justify-center py-4 mb-4" : "px-3 py-3"
+        )}>
+          {isCollapsed ? (
+            <Avatar className="h-6 w-6 rounded-full border-2 border-gray-200">
+              <AvatarFallback className="bg-[#FF5722] text-white text-xs">
+                CT
+              </AvatarFallback>
+            </Avatar>
+          ) : (
+            <div 
+              className="flex items-center py-1.5 font-medium rounded-md px-3 w-full cursor-pointer text-[#FF5722] hover:bg-white hover:text-black"
+            >
+              <Avatar className="h-6 w-6 rounded-full border-2 border-gray-200">
+                <AvatarFallback className="bg-[#FF5722] text-white text-xs">
+                  CT
+                </AvatarFallback>
+              </Avatar>
+              <span className="ml-3 flex-1 text-[14px]">Chris Tierney</span>
+            </div>
+          )}
         </div>
       )}
     </aside>

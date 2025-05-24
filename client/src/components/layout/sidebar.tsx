@@ -161,7 +161,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         isCollapsed ? "md:w-16" : "md:w-64"
       )}
     >
-      <div className={`relative flex ${isCollapsed ? 'flex-col' : 'flex-row'} h-auto border-b border-slate-700 px-4 ${isCollapsed ? 'items-center pb-2' : 'items-center h-16'}`}>
+      <div className={`relative flex ${isCollapsed ? 'flex-col' : 'flex-row'} h-auto px-4 ${isCollapsed ? 'items-center pb-2' : 'items-center h-16'}`}>
         <div className="h-[50px] w-[50px]">
           <img 
             src="/assets/images/logo_50x50.png" 

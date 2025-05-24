@@ -73,11 +73,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     { path: "/", label: "Dashboard", icon: <LayoutDashboard className="h-5 w-5" /> },
     { path: "/invoices", label: "Invoices", icon: <FileText className="h-5 w-5" /> },
     { path: "/projects", label: "Projects", icon: <FolderKanban className="h-5 w-5" /> },
-    { path: "/hosting", label: "Hosting", icon: <Server className="h-5 w-5" />, submenu: [
-      { path: "/hosting/shared", label: "Shared Hosting" },
-      { path: "/hosting/vps", label: "VPS Hosting" },
-      { path: "/hosting/dedicated", label: "Dedicated Servers" },
-    ] },
+    { path: "/hosting", label: "Hosting", icon: <Server className="h-5 w-5" /> },
     { path: "/domains", label: "Domains", icon: <Globe className="h-5 w-5" /> },
     { path: "/analytics", label: "Analytics", icon: <BarChart className="h-5 w-5" /> },
     { path: "/seo", label: "SEO Reports", icon: <Search className="h-5 w-5" /> },
@@ -165,80 +161,62 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         isCollapsed ? "md:w-16" : "md:w-64"
       )}
     >
+      <div className={`relative flex ${isCollapsed ? 'flex-col' : 'flex-row'} h-auto px-4 pt-4 mb-4 ${isCollapsed ? 'items-center pb-2' : 'items-center justify-between'}`}>
+        <img 
+          src="/assets/images/logo_50x50.png" 
+          alt="Company Logo"
+          className={`h-[50px] w-[50px] ${isCollapsed ? 'mb-2' : ''}`}
+        />
+        <img 
+          src="/assets/images/collapse_icon.svg"
+          alt={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className={`h-5 w-5 cursor-pointer text-white hover:opacity-80 ${isCollapsed ? 'mt-2' : 'ml-auto'}`}
+          onClick={toggleCollapse}
+          style={{ transform: isCollapsed ? 'rotate(180deg)' : 'none' }}
+        />
+      </div>
       <div className="flex-1 overflow-y-auto py-4">
         <nav className={cn("px-2 space-y-1", isCollapsed && "flex flex-col items-center")}>
-          <div className={`relative flex ${isCollapsed ? 'flex-col' : 'flex-row'} h-auto px-2 mb-4 ${isCollapsed ? 'items-center pb-2' : 'items-center justify-between h-16'}`}>
-            <img 
-              src="/assets/images/logo_50x50.png" 
-              alt="Company Logo"
-              className={`h-[50px] w-[50px] ${isCollapsed ? 'mb-2' : ''}`}
-            />
-            <img 
-              src="/assets/images/collapse_icon.svg"
-              alt={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-              className={`h-5 w-5 cursor-pointer text-white hover:opacity-80 ${isCollapsed ? 'mt-2' : 'ml-auto'}`}
-              onClick={toggleCollapse}
-              style={{ transform: isCollapsed ? 'rotate(180deg)' : 'none' }}
-            />
-          </div>
-          {navItems.map((item) => (
-             <div key={item.path}>
-            {item.submenu ? (
-              <Collapsible>
-                <CollapsibleTrigger className={cn(
-                  "group flex w-full items-center px-3 py-2 text-sm font-medium rounded-md",
-                  isCollapsed ? "justify-center px-2" : "px-3",
-                  location.startsWith(item.path)
-                    ? "bg-[#FF5722] text-white"
-                    : "text-[#FF5722] hover:bg-white hover:text-black"
-                )}>
+          {navItems.map((item) => {
+            // Only render items without submenu for now
+            if (!item.submenu) {
+              return (
+                <Link 
+                  key={item.path} 
+                  href={item.path}
+                  className={cn(
+                    "group flex items-center py-2 text-sm font-medium rounded-md",
+                    isCollapsed ? "justify-center px-2" : "px-3",
+                    location === item.path
+                      ? "bg-[#FF5722] text-white"
+                      : "text-[#FF5722] hover:bg-white hover:text-black"
+                  )}
+                  title={isCollapsed ? item.label : undefined}
+                >
                   {item.icon}
-                  {!isCollapsed && (
-                    <>
-                      <span className="ml-3 flex-1">{item.label}</span>
-                      <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-90" />
-                    </>
-                  )}
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  {!isCollapsed && item.submenu && (
-                    <div className="ml-6 mt-1 space-y-1">
-                      {item.submenu.map((subItem) => (
-                        <Link
-                          key={subItem.path}
-                          href={subItem.path}
-                          className={cn(
-                            "flex items-center px-3 py-1.5 text-sm rounded-md",
-                            location === subItem.path
-                              ? "bg-[#FF5722]/10 text-[#FF5722]"
-                              : "text-[#FF5722]/70 hover:bg-white hover:text-black"
-                          )}
-                        >
-                          {subItem.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </CollapsibleContent>
-              </Collapsible>
-            ) : (
+                  {!isCollapsed && <span className="ml-3">{item.label}</span>}
+                </Link>
+              );
+            }
+            // For now, just render items with submenu as regular links
+            return (
               <Link 
+                key={item.path} 
                 href={item.path}
                 className={cn(
-                  "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
+                  "group flex items-center py-2 text-sm font-medium rounded-md",
                   isCollapsed ? "justify-center px-2" : "px-3",
                   location === item.path
                     ? "bg-[#FF5722] text-white"
                     : "text-[#FF5722] hover:bg-white hover:text-black"
-              )}
-              title={isCollapsed ? item.label : undefined}
-            >
-              {item.icon}
-              {!isCollapsed && <span className="ml-3">{item.label}</span>}
-            </Link>
-          </div>
-            
-          ))}
+                )}
+                title={isCollapsed ? item.label : undefined}
+              >
+                {item.icon}
+                {!isCollapsed && <span className="ml-3">{item.label}</span>}
+              </Link>
+            );
+          })}
         </nav>
       </div>
       {isAuthenticated && user && !isCollapsed && (

@@ -398,7 +398,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
       {/* User status when not authenticated */}
       {!isAuthenticated && (
         <div className={cn(
-          "absolute bottom-0 left-0 right-0 border-t border-slate-700",
+          "absolute bottom-0 left-0 right-0",
           isCollapsed ? "flex justify-center py-4 mb-4" : "px-3 py-3"
         )}>
           {isCollapsed ? (

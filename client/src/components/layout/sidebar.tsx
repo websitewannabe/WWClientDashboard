@@ -333,7 +333,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           {/* Upgrade button */}
           {!isCollapsed && (
             <div className="mt-6 px-3">
-              <button className="w-full py-3 bg-[#8BC34A] text-white font-medium rounded-md hover:bg-[#71a436] transition-colors duration-200">
+              <button className="w-full py-1.5 bg-[#f4f4f4] text-gray-700 font-medium rounded-md hover:bg-gray-200 transition-colors duration-200 text-sm">
                 Upgrade
               </button>
             </div>

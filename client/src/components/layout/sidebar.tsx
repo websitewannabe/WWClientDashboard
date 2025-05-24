@@ -166,7 +166,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           <img 
             src="/assets/images/logo_50x50.png" 
             alt="Company Logo"
-            className={`h-full w-full ${isCollapsed ? 'absolute top-3' : 'mr-auto'}`}
+            className={`${isCollapsed ? 'absolute top-3' : 'mr-auto'}`}
+            style={{ width: '50px', height: '50px' }}
           />
         </div>
         <img 

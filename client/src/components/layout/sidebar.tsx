@@ -154,15 +154,13 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
             className="h-10 mr-auto" 
           />
         )}
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <img 
+          src="/assets/images/collapse_icon.svg"
+          alt={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="h-5 w-5 ml-auto cursor-pointer text-white hover:opacity-80"
           onClick={toggleCollapse}
-          className="text-white hover:bg-slate-700 ml-auto"
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {isCollapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
-        </Button>
+          style={{ transform: isCollapsed ? 'rotate(180deg)' : 'none' }}
+        />
       </div>
       <div className="flex-1 overflow-y-auto py-4">
         <nav className={cn("px-2 space-y-1", isCollapsed && "flex flex-col items-center")}>

@@ -312,10 +312,18 @@ const navItems: NavItem[] = [
           })}
         </nav>
       </div>
+      {/* Upgrade button */}
+      <div className="mt-auto px-4 py-2">
+        <button className="w-full py-3 bg-[#E8EEFF] text-[#3B5DC9] font-medium rounded-md hover:bg-[#D6E2FF] transition-colors duration-200">
+          Upgrade
+        </button>
+      </div>
+
+      {/* User login status - expanded view */}
       {isAuthenticated && user && !isCollapsed && (
-        <div className="p-4 border-t border-slate-700">
+        <div className="p-4 mt-2 bg-white rounded-lg mx-3 mb-3 shadow-sm">
           <div className="flex items-center">
-            <Avatar className="h-10 w-10 rounded-full">
+            <Avatar className="h-10 w-10 rounded-full border-2 border-gray-200">
               <AvatarImage 
                 src={user?.profileImageUrl || ""} 
                 alt={`${user?.firstName || ''} ${user?.lastName || ''}`} 
@@ -325,14 +333,16 @@ const navItems: NavItem[] = [
               </AvatarFallback>
             </Avatar>
             <div className="ml-3">
-              <p className="text-sm font-medium text-white">
-                {user?.firstName || ''} {user?.lastName || ''}
+              <p className="text-sm font-medium text-slate-700">
+                Chris Tierney
               </p>
-              <p className="text-xs text-slate-300">{user?.email || ''}</p>
+              <p className="text-xs text-slate-500">ctierney@websitewannabe.com</p>
             </div>
           </div>
         </div>
       )}
+      
+      {/* User login status - collapsed view */}
       {isAuthenticated && user && isCollapsed && (
         <div className="py-4 border-t border-slate-700 flex justify-center">
           <Avatar className="h-10 w-10 rounded-full">
@@ -344,6 +354,20 @@ const navItems: NavItem[] = [
               {user?.firstName ? user.firstName.charAt(0) : "U"}
             </AvatarFallback>
           </Avatar>
+        </div>
+      )}
+      
+      {/* Login button if not authenticated */}
+      {!isAuthenticated && !isCollapsed && (
+        <div className="p-4 mt-2 bg-white rounded-lg mx-3 mb-3 shadow-sm">
+          <div className="flex flex-col items-center">
+            <button 
+              onClick={() => window.location.href = "/api/login"}
+              className="w-full py-2 bg-[#8BC34A] text-white font-medium rounded-md hover:bg-[#71a436] transition-colors duration-200"
+            >
+              Log in
+            </button>
+          </div>
         </div>
       )}
     </aside>

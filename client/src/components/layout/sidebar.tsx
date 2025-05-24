@@ -161,24 +161,24 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         isCollapsed ? "md:w-16" : "md:w-64"
       )}
     >
-      <div className={`relative flex items-center h-16 border-b border-slate-700 px-4 ${isCollapsed ? 'justify-center' : ''}`}>
+      <div className={`relative flex ${isCollapsed ? 'flex-col' : 'flex-row'} h-auto border-b border-slate-700 px-4 ${isCollapsed ? 'items-center pb-2' : 'items-center h-16'}`}>
         <div className="h-[50px] w-[50px]">
           <img 
             src="/assets/images/logo_50x50.png" 
             alt="Company Logo"
-            className={`${isCollapsed ? 'absolute top-3' : 'mr-auto'}`}
+            className="pl-[8px] pr-[8px] pt-[8px] pb-[8px] ml-[-11px] mr-[-11px]"
             style={{ width: '50px', height: '50px' }}
           />
         </div>
         <img 
           src="/assets/images/collapse_icon.svg"
           alt={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className={`h-5 w-5 cursor-pointer text-white hover:opacity-80 ${isCollapsed ? 'absolute top-[50px]' : 'ml-auto'}`}
+          className={`h-5 w-5 cursor-pointer text-white hover:opacity-80 ${isCollapsed ? 'mt-2' : 'ml-auto'}`}
           onClick={toggleCollapse}
           style={{ transform: isCollapsed ? 'rotate(180deg)' : 'none' }}
         />
       </div>
-      <div className={`flex-1 overflow-y-auto ${isCollapsed ? 'pt-10' : 'py-4'}`}>
+      <div className="flex-1 overflow-y-auto py-4">
         <nav className={cn("px-2 space-y-1", isCollapsed && "flex flex-col items-center")}>
           {navItems.map((item) => (
             <Link 

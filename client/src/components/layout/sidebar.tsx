@@ -35,6 +35,15 @@ interface SidebarProps {
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+// Create a custom event for sidebar collapse state changes
+const dispatchCollapseEvent = (isCollapsed: boolean) => {
+  const event = new CustomEvent('sidebarCollapseChange', { 
+    detail: { isCollapsed },
+    bubbles: true 
+  });
+  window.dispatchEvent(event);
+};
+
 export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) {
   const [location] = useLocation();
   const { user, isAuthenticated } = useAuth();
@@ -44,7 +53,10 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
   useEffect(() => {
     const savedState = localStorage.getItem('sidebarCollapsed');
     if (savedState) {
-      setIsCollapsed(savedState === 'true');
+      const collapsedState = savedState === 'true';
+      setIsCollapsed(collapsedState);
+      // Dispatch event on initial load to sync with other components
+      dispatchCollapseEvent(collapsedState);
     }
   }, []);
 
@@ -52,6 +64,9 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     const newState = !isCollapsed;
     setIsCollapsed(newState);
     localStorage.setItem('sidebarCollapsed', String(newState));
+    
+    // Dispatch custom event when sidebar is collapsed/expanded
+    dispatchCollapseEvent(newState);
   };
 
   const navItems = [

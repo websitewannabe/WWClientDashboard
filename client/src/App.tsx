@@ -45,14 +45,25 @@ function Router() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  // Listen for changes in localStorage
+  // Listen for sidebar collapse changes
   useEffect(() => {
     const handleStorage = () => {
       const savedState = localStorage.getItem('sidebarCollapsed');
       setIsCollapsed(savedState === 'true');
     };
+    
+    // Listen for custom sidebar collapse event
+    const handleCollapseEvent = (event: CustomEvent) => {
+      setIsCollapsed(event.detail.isCollapsed);
+    };
+    
     window.addEventListener('storage', handleStorage);
-    return () => window.removeEventListener('storage', handleStorage);
+    window.addEventListener('sidebarCollapseChange', handleCollapseEvent as EventListener);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+      window.removeEventListener('sidebarCollapseChange', handleCollapseEvent as EventListener);
+    };
   }, []);
 
   return (

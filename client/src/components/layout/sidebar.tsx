@@ -164,7 +164,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
       <div className={`relative flex items-center h-16 px-4 ${isCollapsed ? 'justify-center' : ''}`}>
         <img 
           src="/assets/images/logo_favicon.png" 
-          alt="Company Logo" 
+          alt="Company Logo"
+          className="h-[50px] w-[50px]" 
           className={`h-10 ${isCollapsed ? 'absolute top-3' : 'mr-auto'}`}
         />
         <img 

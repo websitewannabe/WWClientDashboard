@@ -141,7 +141,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         {/* Parent menu item */}
         <div 
           className={cn(
-            "flex items-center py-2 text-sm font-medium rounded-md px-3 w-full cursor-pointer",
+            "flex items-center py-2 font-medium rounded-md px-3 w-full cursor-pointer",
             isActive
               ? "bg-[#FF5722] text-white"
               : "text-[#FF5722] hover:bg-white hover:text-black"
@@ -149,7 +149,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           onClick={() => toggleSubmenu(item.path)}
         >
           {item.icon}
-          <span className="ml-3 flex-1">{item.label}</span>
+          <span className="ml-3 flex-1 text-base">{item.label}</span>
           <ChevronRight 
             className={cn(
               "h-4 w-4 transition-transform duration-200",
@@ -166,13 +166,13 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
                 key={subItem.path}
                 href={subItem.path}
                 className={cn(
-                  "flex items-center px-3 py-1.5 text-sm rounded-md",
+                  "flex items-center px-3 py-1.5 rounded-md",
                   location === subItem.path
                     ? "bg-[#FF5722] text-white"
-                    : "text-black hover:bg-white hover:text-[#FF5722]"
+                    : "text-gray-200 hover:bg-white hover:text-[#FF5722]"
                 )}
               >
-                {subItem.label}
+                <span className="text-sm">{subItem.label}</span>
               </Link>
             ))}
           </div>
@@ -207,7 +207,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         key={item.path} 
         href={item.path}
         className={cn(
-          "group flex items-center py-2 text-sm font-medium rounded-md",
+          "group flex items-center py-2 font-medium rounded-md",
           isCollapsed ? "justify-center px-2" : "px-3",
           location === item.path
             ? "bg-[#FF5722] text-white"
@@ -216,7 +216,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         title={isCollapsed ? item.label : undefined}
       >
         {item.icon}
-        {!isCollapsed && <span className="ml-3">{item.label}</span>}
+        {!isCollapsed && <span className="ml-3 text-base">{item.label}</span>}
       </Link>
     );
   };
@@ -333,7 +333,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           {/* Upgrade button */}
           {!isCollapsed && (
             <div className="mt-6 px-3">
-              <button className="w-full py-3 bg-[#E8EEFF] text-[#3B5DC9] font-medium rounded-md hover:bg-[#D6E2FF] transition-colors duration-200">
+              <button className="w-full py-3 bg-[#8BC34A] text-white font-medium rounded-md hover:bg-[#71a436] transition-colors duration-200">
                 Upgrade
               </button>
             </div>

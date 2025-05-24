@@ -344,14 +344,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
             return renderRegularMenuItem(item);
           })}
           
-          {/* Upgrade button */}
-          {!isCollapsed && (
-            <div className="mt-6 px-3">
-              <button className="w-full py-1.5 bg-[#f4f4f4] text-gray-700 font-medium rounded-md hover:bg-gray-200 transition-colors duration-200 text-sm">
-                Upgrade
-              </button>
-            </div>
-          )}
+
           
           {/* User section in expanded view */}
           {isAuthenticated && user && !isCollapsed && (
@@ -399,8 +392,17 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
       {!isAuthenticated && (
         <div className={cn(
           "absolute bottom-0 left-0 right-0",
-          isCollapsed ? "flex justify-center py-4 mb-4" : "px-3 py-3"
+          isCollapsed ? "flex flex-col items-center py-4 mb-4" : "py-3"
         )}>
+          {/* Upgrade button right above the user profile */}
+          {!isCollapsed && (
+            <div className="px-3 mb-2">
+              <button className="w-full py-1.5 bg-[#f4f4f4] text-gray-700 font-medium rounded-md hover:bg-gray-200 transition-colors duration-200 text-sm">
+                Upgrade
+              </button>
+            </div>
+          )}
+          
           {isCollapsed ? (
             <Avatar className="h-6 w-6 rounded-full border-2 border-gray-200">
               <AvatarFallback className="bg-[#FF5722] text-white text-xs">
@@ -408,15 +410,17 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
               </AvatarFallback>
             </Avatar>
           ) : (
-            <div 
-              className="flex items-center py-1.5 font-medium rounded-md px-3 w-full cursor-pointer text-[#FF5722] hover:bg-white hover:text-black"
-            >
-              <Avatar className="h-6 w-6 rounded-full border-2 border-gray-200">
-                <AvatarFallback className="bg-[#FF5722] text-white text-xs">
-                  CT
-                </AvatarFallback>
-              </Avatar>
-              <span className="ml-3 flex-1 text-[14px]">Chris Tierney</span>
+            <div className="px-3">
+              <div 
+                className="flex items-center py-1.5 font-medium rounded-md px-3 w-full cursor-pointer text-[#FF5722] hover:bg-white hover:text-black"
+              >
+                <Avatar className="h-6 w-6 rounded-full border-2 border-gray-200">
+                  <AvatarFallback className="bg-[#FF5722] text-white text-xs">
+                    CT
+                  </AvatarFallback>
+                </Avatar>
+                <span className="ml-3 flex-1 text-[14px]">Chris Tierney</span>
+              </div>
             </div>
           )}
         </div>

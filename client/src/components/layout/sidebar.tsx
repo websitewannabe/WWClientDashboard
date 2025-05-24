@@ -162,11 +162,13 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
       )}
     >
       <div className={`relative flex items-center h-16 border-b border-slate-700 px-4 ${isCollapsed ? 'justify-center' : ''}`}>
-        <img 
-          src="/assets/images/logo_50x50.png" 
-          alt="Company Logo"
-          className={`h-[50px] w-[50px] ${isCollapsed ? 'absolute top-3' : 'mr-auto'}`}
-        />
+        <div className="h-[50px] w-[50px]">
+          <img 
+            src="/assets/images/logo_50x50.png" 
+            alt="Company Logo"
+            className={`h-full w-full ${isCollapsed ? 'absolute top-3' : 'mr-auto'}`}
+          />
+        </div>
         <img 
           src="/assets/images/collapse_icon.svg"
           alt={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}

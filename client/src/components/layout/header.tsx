@@ -49,7 +49,11 @@ export default function Header({ toggleSidebar }: HeaderProps) {
 
   return (
     <header className="bg-white shadow-sm z-10 sticky top-0 border-b border-[#8BC34A]/20">
-      <div className={`flex items-center justify-between h-16 pr-0 transition-all duration-300 ${isCollapsed ? 'pl-[16px] md:pl-[85px]' : 'pl-[69px] md:pl-[133px]'}`}>
+      <div className={`flex items-center justify-between h-16 pr-4 transition-all duration-300 
+        ${isCollapsed 
+          ? 'pl-4 md:pl-[4.5rem]' // When sidebar is collapsed (70px + some spacing)
+          : 'pl-4 md:pl-[16rem]'  // When sidebar is expanded (256px + some spacing)
+        }`}>
         <div className="flex items-center md:hidden">
           <Button
             variant="ghost" 

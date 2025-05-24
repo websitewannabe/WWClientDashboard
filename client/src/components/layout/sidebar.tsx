@@ -86,7 +86,16 @@ type NavItem = {
 const navItems: NavItem[] = [
     { path: "/", label: "Dashboard", icon: <LayoutDashboard className="h-5 w-5" /> },
     { path: "/invoices", label: "Invoices", icon: <FileText className="h-5 w-5" /> },
-    { path: "/projects", label: "Projects", icon: <FolderKanban className="h-5 w-5" /> },
+    { 
+      path: "/projects", 
+      label: "Projects", 
+      icon: <FolderKanban className="h-5 w-5" />,
+      submenu: [
+        { path: "/projects/active", label: "Active Projects" },
+        { path: "/projects/completed", label: "Completed Projects" },
+        { path: "/projects/pending", label: "Pending Approval" },
+      ]
+    },
     { 
       path: "/hosting", 
       label: "Hosting", 

@@ -236,8 +236,8 @@ const navItems: NavItem[] = [
                           className={cn(
                             "flex items-center px-3 py-1.5 text-sm rounded-md",
                             location === subItem.path
-                              ? "bg-[#FF5722]/10 text-[#FF5722]"
-                              : "text-[#FF5722]/70 hover:bg-white hover:text-black"
+                              ? "bg-[#FF5722] text-white"
+                              : "text-black hover:bg-white hover:text-[#FF5722]"
                           )}
                         >
                           {subItem.label}

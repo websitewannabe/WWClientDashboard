@@ -166,7 +166,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           <img 
             src="/assets/images/logo_50x50.png" 
             alt="Company Logo"
-            className="pl-[8px] pr-[8px] pt-[8px] pb-[8px] ml-[-11px] mr-[-11px]"
+            className="pl-[8px] pr-[8px] pt-[8px] pb-[8px] ml-[-1px] mr-[-1px]"
             style={{ width: '50px', height: '50px' }}
           />
         </div>

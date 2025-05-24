@@ -73,7 +73,11 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     { path: "/", label: "Dashboard", icon: <LayoutDashboard className="h-5 w-5" /> },
     { path: "/invoices", label: "Invoices", icon: <FileText className="h-5 w-5" /> },
     { path: "/projects", label: "Projects", icon: <FolderKanban className="h-5 w-5" /> },
-    { path: "/hosting", label: "Hosting", icon: <Server className="h-5 w-5" /> },
+    { path: "/hosting", label: "Hosting", icon: <Server className="h-5 w-5" />, submenu: [
+      { path: "/hosting/shared", label: "Shared Hosting" },
+      { path: "/hosting/vps", label: "VPS Hosting" },
+      { path: "/hosting/dedicated", label: "Dedicated Servers" },
+    ] },
     { path: "/domains", label: "Domains", icon: <Globe className="h-5 w-5" /> },
     { path: "/analytics", label: "Analytics", icon: <BarChart className="h-5 w-5" /> },
     { path: "/seo", label: "SEO Reports", icon: <Search className="h-5 w-5" /> },
@@ -178,11 +182,11 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
             />
           </div>
           {navItems.map((item) => (
+             <div key={item.path}>
             <Link 
-              key={item.path} 
               href={item.path}
               className={cn(
-                "group flex items-center py-2 text-sm font-medium rounded-md",
+                "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
                 isCollapsed ? "justify-center px-2" : "px-3",
                 location === item.path
                   ? "bg-[#FF5722] text-white"
@@ -193,6 +197,26 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
               {item.icon}
               {!isCollapsed && <span className="ml-3">{item.label}</span>}
             </Link>
+            {!isCollapsed && item.submenu && (
+              <div className="ml-6 mt-1 space-y-1">
+                {item.submenu.map((subItem) => (
+                  <Link
+                    key={subItem.path}
+                    href={subItem.path}
+                    className={cn(
+                      "flex items-center px-3 py-1.5 text-sm rounded-md",
+                      location === subItem.path
+                        ? "bg-[#FF5722]/10 text-[#FF5722]"
+                        : "text-[#FF5722]/70 hover:bg-white hover:text-black"
+                    )}
+                  >
+                    {subItem.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+            
           ))}
         </nav>
       </div>

@@ -27,6 +27,7 @@ import {
   PanelLeft,
   PanelRight
 } from "lucide-react";
+import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 import { useEffect, useState } from "react";
 import type { User } from "@shared/schema";
 
@@ -69,11 +70,33 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     dispatchCollapseEvent(newState);
   };
 
-  const navItems = [
+  // Create Collapsible components 
+const Collapsible = CollapsiblePrimitive.Root;
+const CollapsibleTrigger = CollapsiblePrimitive.Trigger;
+const CollapsibleContent = CollapsiblePrimitive.Content;
+
+// Define the type for navigation items with optional submenu
+type NavItem = {
+  path: string;
+  label: string;
+  icon: React.ReactNode;
+  submenu?: { path: string; label: string }[];
+};
+
+const navItems: NavItem[] = [
     { path: "/", label: "Dashboard", icon: <LayoutDashboard className="h-5 w-5" /> },
     { path: "/invoices", label: "Invoices", icon: <FileText className="h-5 w-5" /> },
     { path: "/projects", label: "Projects", icon: <FolderKanban className="h-5 w-5" /> },
-    { path: "/hosting", label: "Hosting", icon: <Server className="h-5 w-5" /> },
+    { 
+      path: "/hosting", 
+      label: "Hosting", 
+      icon: <Server className="h-5 w-5" />,
+      submenu: [
+        { path: "/hosting/shared", label: "Shared Hosting" },
+        { path: "/hosting/vps", label: "VPS Hosting" },
+        { path: "/hosting/dedicated", label: "Dedicated Servers" },
+      ]
+    },
     { path: "/domains", label: "Domains", icon: <Globe className="h-5 w-5" /> },
     { path: "/analytics", label: "Analytics", icon: <BarChart className="h-5 w-5" /> },
     { path: "/seo", label: "SEO Reports", icon: <Search className="h-5 w-5" /> },
@@ -178,27 +201,75 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
       <div className="flex-1 overflow-y-auto py-4">
         <nav className={cn("px-2 space-y-1", isCollapsed && "flex flex-col items-center")}>
           {navItems.map((item) => {
-            // Only render items without submenu for now
-            if (!item.submenu) {
+            // If item has a submenu, render it as a collapsible component
+            if (item.submenu && !isCollapsed) {
+              const [isOpen, setIsOpen] = useState(false);
+              
               return (
-                <Link 
-                  key={item.path} 
-                  href={item.path}
-                  className={cn(
-                    "group flex items-center py-2 text-sm font-medium rounded-md",
-                    isCollapsed ? "justify-center px-2" : "px-3",
-                    location === item.path
-                      ? "bg-[#FF5722] text-white"
-                      : "text-[#FF5722] hover:bg-white hover:text-black"
-                  )}
-                  title={isCollapsed ? item.label : undefined}
-                >
-                  {item.icon}
-                  {!isCollapsed && <span className="ml-3">{item.label}</span>}
-                </Link>
+                <div key={item.path}>
+                  <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+                    <CollapsibleTrigger asChild>
+                      <button
+                        className={cn(
+                          "w-full group flex items-center py-2 text-sm font-medium rounded-md",
+                          "px-3",
+                          location.startsWith(item.path)
+                            ? "bg-[#FF5722] text-white"
+                            : "text-[#FF5722] hover:bg-white hover:text-black"
+                        )}
+                      >
+                        {item.icon}
+                        <span className="ml-3 flex-1 text-left">{item.label}</span>
+                        <ChevronRight 
+                          className={cn(
+                            "h-4 w-4 transition-transform duration-200",
+                            isOpen ? "rotate-90 transform" : ""
+                          )}
+                        />
+                      </button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="pl-9 mt-1 space-y-1">
+                      {item.submenu.map((subItem) => (
+                        <Link
+                          key={subItem.path}
+                          href={subItem.path}
+                          className={cn(
+                            "flex items-center px-3 py-1.5 text-sm rounded-md",
+                            location === subItem.path
+                              ? "bg-[#FF5722]/10 text-[#FF5722]"
+                              : "text-[#FF5722]/70 hover:bg-white hover:text-black"
+                          )}
+                        >
+                          {subItem.label}
+                        </Link>
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
               );
             }
-            // For now, just render items with submenu as regular links
+            
+            // If item has submenu but sidebar is collapsed, show icon only with tooltip
+            if (item.submenu && isCollapsed) {
+              return (
+                <div key={item.path} className="relative group">
+                  <Link 
+                    href={item.path}
+                    className={cn(
+                      "flex items-center justify-center px-2 py-2 text-sm font-medium rounded-md",
+                      location.startsWith(item.path)
+                        ? "bg-[#FF5722] text-white"
+                        : "text-[#FF5722] hover:bg-white hover:text-black"
+                    )}
+                    title={item.label}
+                  >
+                    {item.icon}
+                  </Link>
+                </div>
+              );
+            }
+            
+            // Regular menu item without submenu
             return (
               <Link 
                 key={item.path} 

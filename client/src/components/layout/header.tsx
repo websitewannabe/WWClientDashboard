@@ -31,7 +31,7 @@ export default function Header({ toggleSidebar }: HeaderProps) {
 
   return (
     <header className="bg-white shadow-sm z-10 sticky top-0 border-b border-[#8BC34A]/20">
-      <div className="flex items-center justify-between h-16 px-4 md:px-6">
+      <div className="flex items-center justify-between h-16 pl-[69px] pr-0 md:pl-[69px] md:pr-0">
         <div className="flex items-center md:hidden">
           <Button
             variant="ghost" 

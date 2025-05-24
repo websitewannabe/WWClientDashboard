@@ -183,13 +183,52 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           </div>
           {navItems.map((item) => (
              <div key={item.path}>
-            <Link 
-              href={item.path}
-              className={cn(
-                "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
-                isCollapsed ? "justify-center px-2" : "px-3",
-                location === item.path
-                  ? "bg-[#FF5722] text-white"
+            {item.submenu ? (
+              <Collapsible>
+                <CollapsibleTrigger className={cn(
+                  "group flex w-full items-center px-3 py-2 text-sm font-medium rounded-md",
+                  isCollapsed ? "justify-center px-2" : "px-3",
+                  location.startsWith(item.path)
+                    ? "bg-[#FF5722] text-white"
+                    : "text-[#FF5722] hover:bg-white hover:text-black"
+                )}>
+                  {item.icon}
+                  {!isCollapsed && (
+                    <>
+                      <span className="ml-3 flex-1">{item.label}</span>
+                      <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-90" />
+                    </>
+                  )}
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  {!isCollapsed && item.submenu && (
+                    <div className="ml-6 mt-1 space-y-1">
+                      {item.submenu.map((subItem) => (
+                        <Link
+                          key={subItem.path}
+                          href={subItem.path}
+                          className={cn(
+                            "flex items-center px-3 py-1.5 text-sm rounded-md",
+                            location === subItem.path
+                              ? "bg-[#FF5722]/10 text-[#FF5722]"
+                              : "text-[#FF5722]/70 hover:bg-white hover:text-black"
+                          )}
+                        >
+                          {subItem.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </CollapsibleContent>
+              </Collapsible>
+            ) : (
+              <Link 
+                href={item.path}
+                className={cn(
+                  "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
+                  isCollapsed ? "justify-center px-2" : "px-3",
+                  location === item.path
+                    ? "bg-[#FF5722] text-white"
                   : "text-[#FF5722] hover:bg-white hover:text-black"
               )}
               title={isCollapsed ? item.label : undefined}

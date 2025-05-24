@@ -362,15 +362,22 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
             </div>
           )}
           
-          {/* Login button if not authenticated */}
+          {/* Mock user login status */}
           {!isAuthenticated && !isCollapsed && (
-            <div className="mt-6 px-3">
-              <button 
-                onClick={() => window.location.href = "/api/login"}
-                className="w-full py-2 bg-[#8BC34A] text-white font-medium rounded-md hover:bg-[#71a436] transition-colors duration-200"
-              >
-                Log in
-              </button>
+            <div className="mt-4 pt-4 border-t border-slate-700">
+              <div className="flex items-center px-3 py-2">
+                <Avatar className="h-10 w-10 rounded-full border-2 border-gray-200">
+                  <AvatarFallback className="bg-[#FF5722] text-white">
+                    CT
+                  </AvatarFallback>
+                </Avatar>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-white">
+                    Chris Tierney
+                  </p>
+                  <p className="text-xs text-slate-300">ctierney@websitewannabe.com</p>
+                </div>
+              </div>
             </div>
           )}
         </nav>
@@ -386,6 +393,17 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
             />
             <AvatarFallback>
               {user?.firstName ? user.firstName.charAt(0) : "U"}
+            </AvatarFallback>
+          </Avatar>
+        </div>
+      )}
+      
+      {/* Mock user status in collapsed view */}
+      {!isAuthenticated && isCollapsed && (
+        <div className="mt-auto py-4 border-t border-slate-700 flex justify-center">
+          <Avatar className="h-10 w-10 rounded-full border-2 border-gray-200">
+            <AvatarFallback className="bg-[#FF5722] text-white">
+              CT
             </AvatarFallback>
           </Avatar>
         </div>

@@ -364,19 +364,16 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           
           {/* Mock user login status */}
           {!isAuthenticated && !isCollapsed && (
-            <div className="mt-4 pt-4 border-t border-slate-700">
-              <div className="flex items-center px-3 py-2">
-                <Avatar className="h-10 w-10 rounded-full border-2 border-gray-200">
-                  <AvatarFallback className="bg-[#FF5722] text-white">
+            <div className="mt-6 px-3">
+              <div 
+                className="flex items-center py-2 font-medium rounded-md px-3 w-full cursor-pointer text-[#FF5722] hover:bg-white hover:text-black"
+              >
+                <Avatar className="h-6 w-6 rounded-full border-2 border-gray-200">
+                  <AvatarFallback className="bg-[#FF5722] text-white text-xs">
                     CT
                   </AvatarFallback>
                 </Avatar>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-white">
-                    Chris Tierney
-                  </p>
-                  <p className="text-xs text-slate-300">ctierney@websitewannabe.com</p>
-                </div>
+                <span className="ml-3 flex-1 text-base">Chris Tierney</span>
               </div>
             </div>
           )}
@@ -398,11 +395,11 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         </div>
       )}
       
-      {/* Mock user status in collapsed view */}
+      {/* User status in collapsed view when not authenticated */}
       {!isAuthenticated && isCollapsed && (
-        <div className="mt-auto py-4 border-t border-slate-700 flex justify-center">
-          <Avatar className="h-10 w-10 rounded-full border-2 border-gray-200">
-            <AvatarFallback className="bg-[#FF5722] text-white">
+        <div className="mt-auto mb-6 flex justify-center">
+          <Avatar className="h-6 w-6 rounded-full border-2 border-gray-200">
+            <AvatarFallback className="bg-[#FF5722] text-white text-xs">
               CT
             </AvatarFallback>
           </Avatar>

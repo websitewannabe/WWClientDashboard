@@ -161,23 +161,21 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         isCollapsed ? "md:w-16" : "md:w-64"
       )}
     >
-      <div className="flex items-center h-16 border-b border-slate-700 px-4">
-        {!isCollapsed && (
-          <img 
-            src="/assets/images/logo_favicon.png" 
-            alt="Company Logo" 
-            className="h-10 mr-auto" 
-          />
-        )}
+      <div className={`relative flex items-center h-16 border-b border-slate-700 px-4 ${isCollapsed ? 'justify-center' : ''}`}>
+        <img 
+          src="/assets/images/logo_favicon.png" 
+          alt="Company Logo" 
+          className={`h-10 ${isCollapsed ? 'absolute top-3' : 'mr-auto'}`}
+        />
         <img 
           src="/assets/images/collapse_icon.svg"
           alt={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className="h-5 w-5 ml-auto cursor-pointer text-white hover:opacity-80"
+          className={`h-5 w-5 cursor-pointer text-white hover:opacity-80 ${isCollapsed ? 'absolute top-[50px]' : 'ml-auto'}`}
           onClick={toggleCollapse}
           style={{ transform: isCollapsed ? 'rotate(180deg)' : 'none' }}
         />
       </div>
-      <div className="flex-1 overflow-y-auto py-4">
+      <div className={`flex-1 overflow-y-auto ${isCollapsed ? 'pt-10' : 'py-4'}`}>
         <nav className={cn("px-2 space-y-1", isCollapsed && "flex flex-col items-center")}>
           {navItems.map((item) => (
             <Link 

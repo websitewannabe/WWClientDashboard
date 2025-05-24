@@ -3,6 +3,7 @@ import { Menu, Bell, User } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState, useEffect } from "react";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -11,6 +12,23 @@ interface HeaderProps {
 export default function Header({ toggleSidebar }: HeaderProps) {
   const [location] = useLocation();
   const { user, isAuthenticated } = useAuth();
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    return savedState ? savedState === 'true' : false;
+  });
+
+  // Listen for sidebar collapse changes
+  useEffect(() => {
+    const handleCollapseEvent = (event: CustomEvent) => {
+      setIsCollapsed(event.detail.isCollapsed);
+    };
+    
+    window.addEventListener('sidebarCollapseChange', handleCollapseEvent as EventListener);
+    
+    return () => {
+      window.removeEventListener('sidebarCollapseChange', handleCollapseEvent as EventListener);
+    };
+  }, []);
 
   const getPageTitle = () => {
     switch (location) {
@@ -31,7 +49,7 @@ export default function Header({ toggleSidebar }: HeaderProps) {
 
   return (
     <header className="bg-white shadow-sm z-10 sticky top-0 border-b border-[#8BC34A]/20">
-      <div className="flex items-center justify-between h-16 pl-[69px] pr-0 md:pl-[69px] md:pr-0">
+      <div className={`flex items-center justify-between h-16 pr-0 transition-all duration-300 ${isCollapsed ? 'pl-[16px] md:pl-[85px]' : 'pl-[69px] md:pl-[133px]'}`}>
         <div className="flex items-center md:hidden">
           <Button
             variant="ghost" 

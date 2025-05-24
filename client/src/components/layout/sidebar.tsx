@@ -27,9 +27,16 @@ import {
   PanelLeft,
   PanelRight
 } from "lucide-react";
-import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 import { useEffect, useState } from "react";
 import type { User } from "@shared/schema";
+
+// Define type for navigation items
+interface NavItem {
+  path: string;
+  label: string;
+  icon: React.ReactNode;
+  submenu?: { path: string; label: string }[];
+}
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -70,12 +77,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     dispatchCollapseEvent(newState);
   };
 
-  // Create Collapsible components 
-const Collapsible = CollapsiblePrimitive.Root;
-const CollapsibleTrigger = CollapsiblePrimitive.Trigger;
-const CollapsibleContent = CollapsiblePrimitive.Content;
-
-// Define the type for navigation items with optional submenu
+  // Define the type for navigation items with optional submenu
 type NavItem = {
   path: string;
   label: string;
@@ -107,7 +109,16 @@ const navItems: NavItem[] = [
       ]
     },
     { path: "/domains", label: "Domains", icon: <Globe className="h-5 w-5" /> },
-    { path: "/analytics", label: "Analytics", icon: <BarChart className="h-5 w-5" /> },
+    { 
+      path: "/analytics", 
+      label: "Analytics", 
+      icon: <BarChart className="h-5 w-5" />,
+      submenu: [
+        { path: "/analytics/traffic", label: "Traffic Overview" },
+        { path: "/analytics/conversions", label: "Conversion Reports" },
+        { path: "/analytics/campaigns", label: "Campaign Performance" },
+      ]
+    },
     { path: "/seo", label: "SEO Reports", icon: <Search className="h-5 w-5" /> },
     { path: "/content", label: "Content Calendar", icon: <CalendarDays className="h-5 w-5" /> },
     { path: "/resources", label: "Resources", icon: <Paperclip className="h-5 w-5" /> },
@@ -210,71 +221,61 @@ const navItems: NavItem[] = [
       <div className="flex-1 overflow-y-auto py-4">
         <nav className={cn("px-2 space-y-1", isCollapsed && "flex flex-col items-center")}>
           {navItems.map((item) => {
-            // If item has a submenu, render it as a collapsible component
+            // If item has a submenu and sidebar is expanded, render parent and submenu
             if (item.submenu && !isCollapsed) {
-              const [isOpen, setIsOpen] = useState(false);
+              const isActive = location.startsWith(item.path);
               
               return (
-                <div key={item.path}>
-                  <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-                    <CollapsibleTrigger asChild>
-                      <button
+                <div key={item.path} className="space-y-1">
+                  {/* Parent menu item */}
+                  <div className={cn(
+                    "flex items-center py-2 text-sm font-medium rounded-md px-3 w-full cursor-pointer",
+                    isActive
+                      ? "bg-[#FF5722] text-white"
+                      : "text-[#FF5722] hover:bg-white hover:text-black"
+                  )}>
+                    {item.icon}
+                    <span className="ml-3 flex-1">{item.label}</span>
+                    <ChevronRight className="h-4 w-4" />
+                  </div>
+                  
+                  {/* Submenu items */}
+                  <div className="pl-9 space-y-1">
+                    {item.submenu.map((subItem) => (
+                      <Link
+                        key={subItem.path}
+                        href={subItem.path}
                         className={cn(
-                          "w-full group flex items-center py-2 text-sm font-medium rounded-md",
-                          "px-3",
-                          location.startsWith(item.path)
+                          "flex items-center px-3 py-1.5 text-sm rounded-md",
+                          location === subItem.path
                             ? "bg-[#FF5722] text-white"
-                            : "text-[#FF5722] hover:bg-white hover:text-black"
+                            : "text-black hover:bg-white hover:text-[#FF5722]"
                         )}
                       >
-                        {item.icon}
-                        <span className="ml-3 flex-1 text-left">{item.label}</span>
-                        <ChevronRight 
-                          className={cn(
-                            "h-4 w-4 transition-transform duration-200",
-                            isOpen ? "rotate-90 transform" : ""
-                          )}
-                        />
-                      </button>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className="pl-9 mt-1 space-y-1">
-                      {item.submenu.map((subItem) => (
-                        <Link
-                          key={subItem.path}
-                          href={subItem.path}
-                          className={cn(
-                            "flex items-center px-3 py-1.5 text-sm rounded-md",
-                            location === subItem.path
-                              ? "bg-[#FF5722] text-white"
-                              : "text-black hover:bg-white hover:text-[#FF5722]"
-                          )}
-                        >
-                          {subItem.label}
-                        </Link>
-                      ))}
-                    </CollapsibleContent>
-                  </Collapsible>
+                        {subItem.label}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               );
             }
             
-            // If item has submenu but sidebar is collapsed, show icon only with tooltip
+            // If item has submenu but sidebar is collapsed, just show parent icon
             if (item.submenu && isCollapsed) {
               return (
-                <div key={item.path} className="relative group">
-                  <Link 
-                    href={item.path}
-                    className={cn(
-                      "flex items-center justify-center px-2 py-2 text-sm font-medium rounded-md",
-                      location.startsWith(item.path)
-                        ? "bg-[#FF5722] text-white"
-                        : "text-[#FF5722] hover:bg-white hover:text-black"
-                    )}
-                    title={item.label}
-                  >
-                    {item.icon}
-                  </Link>
-                </div>
+                <Link 
+                  key={item.path} 
+                  href={item.path}
+                  className={cn(
+                    "flex items-center justify-center px-2 py-2 text-sm font-medium rounded-md",
+                    location.startsWith(item.path)
+                      ? "bg-[#FF5722] text-white"
+                      : "text-[#FF5722] hover:bg-white hover:text-black"
+                  )}
+                  title={item.label}
+                >
+                  {item.icon}
+                </Link>
               );
             }
             

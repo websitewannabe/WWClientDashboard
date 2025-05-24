@@ -149,7 +149,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
       <div className="flex items-center h-16 border-b border-slate-700 px-4">
         {!isCollapsed && (
           <img 
-            src="/assets/images/company-logo.png" 
+            src="/public/assets/images/company-logo.png" 
             alt="Company Logo" 
             className="h-10 mr-auto" 
           />

@@ -149,7 +149,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           onClick={() => toggleSubmenu(item.path)}
         >
           {item.icon}
-          <span className="ml-3 flex-1 text-base">{item.label}</span>
+          <span className="ml-3 flex-1 text-[14px]">{item.label}</span>
           <ChevronRight 
             className={cn(
               "h-4 w-4 transition-transform duration-200",
@@ -172,7 +172,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
                     : "text-gray-200 hover:bg-white hover:text-[#FF5722]"
                 )}
               >
-                <span className="text-sm">{subItem.label}</span>
+                <span className="text-[14px]">{subItem.label}</span>
               </Link>
             ))}
           </div>
@@ -216,7 +216,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         title={isCollapsed ? item.label : undefined}
       >
         {item.icon}
-        {!isCollapsed && <span className="ml-3 text-base">{item.label}</span>}
+        {!isCollapsed && <span className="ml-3 text-[14px]">{item.label}</span>}
       </Link>
     );
   };
@@ -373,7 +373,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
                     CT
                   </AvatarFallback>
                 </Avatar>
-                <span className="ml-3 flex-1 text-base">Chris Tierney</span>
+                <span className="ml-3 flex-1 text-[14px]">Chris Tierney</span>
               </div>
             </div>
           )}

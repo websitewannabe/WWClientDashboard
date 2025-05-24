@@ -64,7 +64,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     const newState = !isCollapsed;
     setIsCollapsed(newState);
     localStorage.setItem('sidebarCollapsed', String(newState));
-    
+
     // Dispatch custom event when sidebar is collapsed/expanded
     dispatchCollapseEvent(newState);
   };
@@ -86,7 +86,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     { path: "/settings", label: "Settings", icon: <Settings className="h-5 w-5" /> },
     { path: "/admin", label: "Admin Portal", icon: <Shield className="h-5 w-5" /> }
   ];
-  
+
   // Mobile sidebar using Sheet component
   const mobileSidebar = (
     <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
@@ -163,9 +163,9 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     >
       <div className={`relative flex items-center h-16 border-b border-slate-700 px-4 ${isCollapsed ? 'justify-center' : ''}`}>
         <img 
-          src="/assets/images/logo_favicon.png" 
-          alt="Company Logo" 
-          className={`h-10 ${isCollapsed ? 'absolute top-3' : 'mr-auto'}`}
+          src="/assets/images/logo_50x50.png" 
+          alt="Company Logo"
+          className={`h-[50px] w-[50px] ${isCollapsed ? 'absolute top-3' : 'mr-auto'}`}
         />
         <img 
           src="/assets/images/collapse_icon.svg"

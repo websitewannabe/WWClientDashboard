@@ -141,7 +141,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         {/* Parent menu item */}
         <div 
           className={cn(
-            "flex items-center py-2 font-medium rounded-md px-3 w-full cursor-pointer",
+            "flex items-center py-1.5 font-medium rounded-md px-3 w-full cursor-pointer",
             isActive
               ? "bg-[#FF5722] text-white"
               : "text-[#FF5722] hover:bg-white hover:text-black"
@@ -207,7 +207,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         key={item.path} 
         href={item.path}
         className={cn(
-          "group flex items-center py-2 font-medium rounded-md",
+          "group flex items-center py-1.5 font-medium rounded-md",
           isCollapsed ? "justify-center px-2" : "px-3",
           location === item.path
             ? "bg-[#FF5722] text-white"
@@ -296,13 +296,13 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
       )}
     >
       {/* Sidebar content */}
-      <div className="flex-1 overflow-y-auto py-4">
-        <nav className={cn("px-2 space-y-4", isCollapsed && "flex flex-col items-center")}>
+      <div className="flex-1 py-4">
+        <nav className={cn("px-2 space-y-2", isCollapsed && "flex flex-col items-center")}>
           {/* Logo and collapse toggle as first menu item */}
           <div className={cn(
             "flex items-center",
             isCollapsed ? "justify-center" : "justify-between",
-            "mb-4"
+            "mb-2"
           )}>
             <img 
               src="/assets/images/logo_50x50.png" 
@@ -378,9 +378,9 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           
           {/* Mock user login status */}
           {!isAuthenticated && !isCollapsed && (
-            <div className="mt-6 px-3">
+            <div className="mt-2 px-3">
               <div 
-                className="flex items-center py-2 font-medium rounded-md px-3 w-full cursor-pointer text-[#FF5722] hover:bg-white hover:text-black"
+                className="flex items-center py-1.5 font-medium rounded-md px-3 w-full cursor-pointer text-[#FF5722] hover:bg-white hover:text-black"
               >
                 <Avatar className="h-6 w-6 rounded-full border-2 border-gray-200">
                   <AvatarFallback className="bg-[#FF5722] text-white text-xs">

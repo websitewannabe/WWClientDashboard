@@ -223,39 +223,51 @@ const navItems: NavItem[] = [
           {navItems.map((item) => {
             // If item has a submenu and sidebar is expanded, render parent and submenu
             if (item.submenu && !isCollapsed) {
+              // Use state to track if this submenu is expanded
+              const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
               const isActive = location.startsWith(item.path);
               
               return (
                 <div key={item.path} className="space-y-1">
                   {/* Parent menu item */}
-                  <div className={cn(
-                    "flex items-center py-2 text-sm font-medium rounded-md px-3 w-full cursor-pointer",
-                    isActive
-                      ? "bg-[#FF5722] text-white"
-                      : "text-[#FF5722] hover:bg-white hover:text-black"
-                  )}>
+                  <div 
+                    className={cn(
+                      "flex items-center py-2 text-sm font-medium rounded-md px-3 w-full cursor-pointer",
+                      isActive
+                        ? "bg-[#FF5722] text-white"
+                        : "text-[#FF5722] hover:bg-white hover:text-black"
+                    )}
+                    onClick={() => setIsSubmenuOpen(!isSubmenuOpen)}
+                  >
                     {item.icon}
                     <span className="ml-3 flex-1">{item.label}</span>
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight 
+                      className={cn(
+                        "h-4 w-4 transition-transform duration-200",
+                        isSubmenuOpen ? "rotate-90 transform" : ""
+                      )}
+                    />
                   </div>
                   
-                  {/* Submenu items */}
-                  <div className="pl-9 space-y-1">
-                    {item.submenu.map((subItem) => (
-                      <Link
-                        key={subItem.path}
-                        href={subItem.path}
-                        className={cn(
-                          "flex items-center px-3 py-1.5 text-sm rounded-md",
-                          location === subItem.path
-                            ? "bg-[#FF5722] text-white"
-                            : "text-black hover:bg-white hover:text-[#FF5722]"
-                        )}
-                      >
-                        {subItem.label}
-                      </Link>
-                    ))}
-                  </div>
+                  {/* Submenu items - only show when expanded */}
+                  {isSubmenuOpen && (
+                    <div className="pl-9 space-y-1">
+                      {item.submenu.map((subItem) => (
+                        <Link
+                          key={subItem.path}
+                          href={subItem.path}
+                          className={cn(
+                            "flex items-center px-3 py-1.5 text-sm rounded-md",
+                            location === subItem.path
+                              ? "bg-[#FF5722] text-white"
+                              : "text-black hover:bg-white hover:text-[#FF5722]"
+                          )}
+                        >
+                          {subItem.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
               );
             }

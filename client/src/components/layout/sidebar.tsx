@@ -1,6 +1,7 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link, useLocation } from "wouter";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { 
@@ -20,9 +21,13 @@ import {
   Shield,
   Users,
   Menu,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight,
+  PanelLeft,
+  PanelRight
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { User } from "@shared/schema";
 
 interface SidebarProps {
@@ -33,23 +38,38 @@ interface SidebarProps {
 export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) {
   const [location] = useLocation();
   const { user, isAuthenticated } = useAuth();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Store collapse state in localStorage
+  useEffect(() => {
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    if (savedState) {
+      setIsCollapsed(savedState === 'true');
+    }
+  }, []);
+
+  const toggleCollapse = () => {
+    const newState = !isCollapsed;
+    setIsCollapsed(newState);
+    localStorage.setItem('sidebarCollapsed', String(newState));
+  };
 
   const navItems = [
-    { path: "/", label: "Dashboard", icon: <LayoutDashboard className="mr-3 h-5 w-5" /> },
-    { path: "/invoices", label: "Invoices", icon: <FileText className="mr-3 h-5 w-5" /> },
-    { path: "/projects", label: "Projects", icon: <FolderKanban className="mr-3 h-5 w-5" /> },
-    { path: "/hosting", label: "Hosting", icon: <Server className="mr-3 h-5 w-5" /> },
-    { path: "/domains", label: "Domains", icon: <Globe className="mr-3 h-5 w-5" /> },
-    { path: "/analytics", label: "Analytics", icon: <BarChart className="mr-3 h-5 w-5" /> },
-    { path: "/seo", label: "SEO Reports", icon: <Search className="mr-3 h-5 w-5" /> },
-    { path: "/content", label: "Content Calendar", icon: <CalendarDays className="mr-3 h-5 w-5" /> },
-    { path: "/resources", label: "Resources", icon: <Paperclip className="mr-3 h-5 w-5" /> },
-    { path: "/products", label: "Products", icon: <Package className="mr-3 h-5 w-5" /> },
-    { path: "/payments", label: "Payments", icon: <CreditCard className="mr-3 h-5 w-5" /> },
-    { path: "/team", label: "Team", icon: <Users className="mr-3 h-5 w-5" /> },
-    { path: "/support", label: "Support", icon: <HeadphonesIcon className="mr-3 h-5 w-5" /> },
-    { path: "/settings", label: "Settings", icon: <Settings className="mr-3 h-5 w-5" /> },
-    { path: "/admin", label: "Admin Portal", icon: <Shield className="mr-3 h-5 w-5" /> }
+    { path: "/", label: "Dashboard", icon: <LayoutDashboard className="h-5 w-5" /> },
+    { path: "/invoices", label: "Invoices", icon: <FileText className="h-5 w-5" /> },
+    { path: "/projects", label: "Projects", icon: <FolderKanban className="h-5 w-5" /> },
+    { path: "/hosting", label: "Hosting", icon: <Server className="h-5 w-5" /> },
+    { path: "/domains", label: "Domains", icon: <Globe className="h-5 w-5" /> },
+    { path: "/analytics", label: "Analytics", icon: <BarChart className="h-5 w-5" /> },
+    { path: "/seo", label: "SEO Reports", icon: <Search className="h-5 w-5" /> },
+    { path: "/content", label: "Content Calendar", icon: <CalendarDays className="h-5 w-5" /> },
+    { path: "/resources", label: "Resources", icon: <Paperclip className="h-5 w-5" /> },
+    { path: "/products", label: "Products", icon: <Package className="h-5 w-5" /> },
+    { path: "/payments", label: "Payments", icon: <CreditCard className="h-5 w-5" /> },
+    { path: "/team", label: "Team", icon: <Users className="h-5 w-5" /> },
+    { path: "/support", label: "Support", icon: <HeadphonesIcon className="h-5 w-5" /> },
+    { path: "/settings", label: "Settings", icon: <Settings className="h-5 w-5" /> },
+    { path: "/admin", label: "Admin Portal", icon: <Shield className="h-5 w-5" /> }
   ];
   
   // Mobile sidebar using Sheet component
@@ -57,12 +77,20 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
     <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
       <SheetContent side="left" className="bg-primary-900 text-white p-0 w-64">
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-center h-16 border-b border-slate-700 px-4">
+          <div className="flex items-center justify-between h-16 border-b border-slate-700 px-4">
             <img 
               src="/assets/images/logo.webp" 
               alt="Company Logo" 
               className="h-10" 
             />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setIsSidebarOpen(false)}
+              className="text-white hover:bg-slate-700"
+            >
+              <X className="h-5 w-5" />
+            </Button>
           </div>
           <div className="flex-1 overflow-y-auto py-4">
             <nav className="px-2 space-y-1">
@@ -79,7 +107,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
                   onClick={() => setIsSidebarOpen(false)}
                 >
                   {item.icon}
-                  {item.label}
+                  <span className="ml-3">{item.label}</span>
                 </Link>
               ))}
             </nav>
@@ -112,34 +140,52 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
 
   // Desktop sidebar
   const desktopSidebar = (
-    <aside className="hidden md:flex md:w-64 flex-col fixed inset-y-0 z-40 bg-primary-900 text-white">
-      <div className="flex items-center justify-center h-16 border-b border-slate-700 px-4">
-        <img 
-          src="/assets/images/logo.webp" 
-          alt="Company Logo" 
-          className="h-10" 
-        />
+    <aside 
+      className={cn(
+        "hidden md:flex flex-col fixed inset-y-0 z-40 bg-primary-900 text-white transition-all duration-300",
+        isCollapsed ? "md:w-16" : "md:w-64"
+      )}
+    >
+      <div className="flex items-center h-16 border-b border-slate-700 px-4">
+        {!isCollapsed && (
+          <img 
+            src="/assets/images/logo.webp" 
+            alt="Company Logo" 
+            className="h-10 mr-auto" 
+          />
+        )}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={toggleCollapse}
+          className="text-white hover:bg-slate-700 ml-auto"
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {isCollapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
+        </Button>
       </div>
       <div className="flex-1 overflow-y-auto py-4">
-        <nav className="px-2 space-y-1">
+        <nav className={cn("px-2 space-y-1", isCollapsed && "flex flex-col items-center")}>
           {navItems.map((item) => (
             <Link 
               key={item.path} 
               href={item.path}
               className={cn(
-                "group flex items-center px-3 py-2 text-sm font-medium rounded-md",
+                "group flex items-center py-2 text-sm font-medium rounded-md",
+                isCollapsed ? "justify-center px-2" : "px-3",
                 location === item.path
                   ? "bg-[#FF5722] text-white"
                   : "text-[#FF5722] hover:bg-white hover:text-black"
               )}
+              title={isCollapsed ? item.label : undefined}
             >
               {item.icon}
-              {item.label}
+              {!isCollapsed && <span className="ml-3">{item.label}</span>}
             </Link>
           ))}
         </nav>
       </div>
-      {isAuthenticated && user && (
+      {isAuthenticated && user && !isCollapsed && (
         <div className="p-4 border-t border-slate-700">
           <div className="flex items-center">
             <Avatar className="h-10 w-10 rounded-full">
@@ -158,6 +204,19 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
               <p className="text-xs text-slate-300">{user?.email || ''}</p>
             </div>
           </div>
+        </div>
+      )}
+      {isAuthenticated && user && isCollapsed && (
+        <div className="py-4 border-t border-slate-700 flex justify-center">
+          <Avatar className="h-10 w-10 rounded-full">
+            <AvatarImage 
+              src={user?.profileImageUrl || ""} 
+              alt={`${user?.firstName || ''} ${user?.lastName || ''}`} 
+            />
+            <AvatarFallback>
+              {user?.firstName ? user.firstName.charAt(0) : "U"}
+            </AvatarFallback>
+          </Avatar>
         </div>
       )}
     </aside>

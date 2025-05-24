@@ -295,25 +295,39 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         isCollapsed ? "md:w-16" : "md:w-64"
       )}
     >
-      {/* Sidebar header with logo and collapse toggle */}
-      <div className={`relative flex ${isCollapsed ? 'flex-col' : 'flex-row'} h-auto px-4 pt-4 mb-4 ${isCollapsed ? 'items-center pb-2' : 'items-center justify-between'}`}>
-        <img 
-          src="/assets/images/logo_50x50.png" 
-          alt="Company Logo"
-          className={`h-[50px] w-[50px] ${isCollapsed ? 'mb-2' : ''}`}
-        />
-        <img 
-          src="/assets/images/collapse_icon.svg"
-          alt={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className={`h-5 w-5 cursor-pointer text-white hover:opacity-80 ${isCollapsed ? 'mt-2' : 'ml-auto'}`}
-          onClick={toggleCollapse}
-          style={{ transform: isCollapsed ? 'rotate(180deg)' : 'none' }}
-        />
-      </div>
-      
       {/* Sidebar content */}
       <div className="flex-1 overflow-y-auto py-4">
-        <nav className={cn("px-2 space-y-1", isCollapsed && "flex flex-col items-center")}>
+        <nav className={cn("px-2 space-y-4", isCollapsed && "flex flex-col items-center")}>
+          {/* Logo and collapse toggle as first menu item */}
+          <div className={cn(
+            "flex items-center",
+            isCollapsed ? "justify-center" : "justify-between",
+            "mb-4"
+          )}>
+            <img 
+              src="/assets/images/logo_50x50.png" 
+              alt="Company Logo"
+              className="h-[50px] w-[50px]"
+            />
+            {!isCollapsed && (
+              <img 
+                src="/assets/images/collapse_icon.svg"
+                alt="Collapse sidebar"
+                className="h-5 w-5 cursor-pointer text-white hover:opacity-80 ml-auto"
+                onClick={toggleCollapse}
+              />
+            )}
+            {isCollapsed && (
+              <img 
+                src="/assets/images/collapse_icon.svg"
+                alt="Expand sidebar"
+                className="h-5 w-5 cursor-pointer text-white hover:opacity-80 mt-2"
+                onClick={toggleCollapse}
+                style={{ transform: 'rotate(180deg)' }}
+              />
+            )}
+          </div>
+          
           {/* Navigation Items */}
           {navItems.map((item) => {
             // Item with submenu and sidebar expanded

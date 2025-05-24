@@ -229,31 +229,13 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
                   isCollapsed ? "justify-center px-2" : "px-3",
                   location === item.path
                     ? "bg-[#FF5722] text-white"
-                  : "text-[#FF5722] hover:bg-white hover:text-black"
+                    : "text-[#FF5722] hover:bg-white hover:text-black"
               )}
               title={isCollapsed ? item.label : undefined}
             >
               {item.icon}
               {!isCollapsed && <span className="ml-3">{item.label}</span>}
             </Link>
-            {!isCollapsed && item.submenu && (
-              <div className="ml-6 mt-1 space-y-1">
-                {item.submenu.map((subItem) => (
-                  <Link
-                    key={subItem.path}
-                    href={subItem.path}
-                    className={cn(
-                      "flex items-center px-3 py-1.5 text-sm rounded-md",
-                      location === subItem.path
-                        ? "bg-[#FF5722]/10 text-[#FF5722]"
-                        : "text-[#FF5722]/70 hover:bg-white hover:text-black"
-                    )}
-                  >
-                    {subItem.label}
-                  </Link>
-                ))}
-              </div>
-            )}
           </div>
             
           ))}

@@ -1,7 +1,0 @@
-<svg width="250" height="50" viewBox="0 0 250 50" xmlns="http://www.w3.org/2000/svg">
-  <!-- Base of logo -->
-  <rect x="10" y="10" width="35" height="30" rx="5" fill="#FF5722" />
-  
-  <!-- Text part -->
-  <text x="55" y="30" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#333">Your Logo</text>
-</svg>

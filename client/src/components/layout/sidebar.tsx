@@ -161,16 +161,13 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         isCollapsed ? "md:w-16" : "md:w-64"
       )}
     >
-      <div className={`relative flex ${isCollapsed ? 'flex-col' : 'flex-row'} h-auto px-4 ${isCollapsed ? 'items-center pb-2' : 'items-center h-16'}`}>
-        <div className="h-[50px] w-[50px]">
+      <div className={`relative flex ${isCollapsed ? 'flex-col' : 'flex-row'} h-auto px-4 ${isCollapsed ? 'items-center pb-2' : 'items-center justify-between h-16'}`}>
           <img 
             src="/assets/images/logo_50x50.png" 
             alt="Company Logo"
-            className="pl-[8px] pr-[8px] pt-[8px] pb-[8px] ml-[-1px] mr-[-1px]"
-            style={{ width: '50px', height: '50px' }}
+            className={`h-[50px] w-[50px] ${isCollapsed ? 'mb-2' : ''}`}
           />
-        </div>
-        <img 
+          <img 
           src="/assets/images/collapse_icon.svg"
           alt={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           className={`h-5 w-5 cursor-pointer text-white hover:opacity-80 ${isCollapsed ? 'mt-2' : 'ml-auto'}`}

@@ -43,7 +43,7 @@ export default function Header({ toggleSidebar }: HeaderProps) {
             <span className="sr-only">Open menu</span>
           </Button>
         </div>
-        <div className="flex items-center md:flex-1">
+        <div className="flex items-center md:flex-1 transition-all duration-300">
           <div className="hidden md:block">
             <h2 className="text-xl font-semibold text-slate-800">{getPageTitle()}</h2>
           </div>

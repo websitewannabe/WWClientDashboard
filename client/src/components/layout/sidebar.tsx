@@ -161,11 +161,11 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         isCollapsed ? "md:w-16" : "md:w-64"
       )}
     >
-      <div className={`relative flex items-center h-16 px-4 border-b border-slate-700 ${isCollapsed ? 'justify-center' : ''}`}>
+      <div className={`relative flex items-center h-16 border-b border-slate-700 px-4 ${isCollapsed ? 'justify-center' : ''}`}>
         <img 
           src="/assets/images/logo_favicon.png" 
-          alt="Company Logo"
-          className={`h-[50px] w-[50px] ${isCollapsed ? 'absolute top-3' : 'mr-auto'}`}
+          alt="Company Logo" 
+          className={`h-10 ${isCollapsed ? 'absolute top-3' : 'mr-auto'}`}
         />
         <img 
           src="/assets/images/collapse_icon.svg"

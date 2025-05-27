@@ -23,6 +23,8 @@ import ClientDetailPage from "@/pages/admin/client-detail";
 import AddClientPage from "@/pages/admin/add-client";
 import ImportContacts from "@/pages/admin/import-contacts";
 import ClientAnalytics from "@/pages/admin/client-analytics";
+import SignIn from "@/pages/sign-in";
+import CreateAccount from "@/pages/create-account";
 import Sidebar from "@/components/layout/sidebar";
 import MobileNav from "@/components/layout/mobile-nav";
 import Header from "@/components/layout/header";
@@ -67,39 +69,48 @@ function Router() {
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+    <Switch>
+      {/* Authentication routes without sidebar/header */}
+      <Route path="/sign-in" component={SignIn} />
+      <Route path="/create-account" component={CreateAccount} />
       
-      <div className="flex flex-col flex-1 transition-all duration-300">
-        <Header toggleSidebar={toggleSidebar} />
-        
-        <main className={`flex-1 overflow-y-auto p-4 md:p-6 pb-16 md:pb-6 bg-slate-100 transition-all duration-300 ${isCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
-          <Switch>
-            <Route path="/" component={Dashboard} />
-            <Route path="/invoices" component={Invoices} />
-            <Route path="/projects" component={Projects} />
-            <Route path="/hosting" component={Hosting} />
-            <Route path="/domains" component={Domains} />
-            <Route path="/analytics" component={Analytics} />
-            <Route path="/seo" component={SEOReports} />
-            <Route path="/content" component={ContentCalendar} />
-            <Route path="/resources" component={Resources} />
-            <Route path="/payments" component={Payments} />
-            <Route path="/team" component={Team} />
-            <Route path="/support" component={Support} />
-            <Route path="/settings" component={Settings} />
-            <Route path="/admin" component={AdminDashboard} />
-            <Route path="/admin/client-detail" component={ClientDetailPage} />
-            <Route path="/admin/add-client" component={AddClientPage} />
-            <Route path="/admin/import-contacts" component={ImportContacts} />
-            <Route path="/admin/client-analytics" component={ClientAnalytics} />
-            <Route component={NotFound} />
-          </Switch>
-        </main>
-      </div>
-      
-      <MobileNav />
-    </div>
+      {/* Main app routes with sidebar/header */}
+      <Route>
+        <div className="flex h-screen overflow-hidden">
+          <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+          
+          <div className="flex flex-col flex-1 transition-all duration-300">
+            <Header toggleSidebar={toggleSidebar} />
+            
+            <main className={`flex-1 overflow-y-auto p-4 md:p-6 pb-16 md:pb-6 bg-slate-100 transition-all duration-300 ${isCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
+              <Switch>
+                <Route path="/" component={Dashboard} />
+                <Route path="/invoices" component={Invoices} />
+                <Route path="/projects" component={Projects} />
+                <Route path="/hosting" component={Hosting} />
+                <Route path="/domains" component={Domains} />
+                <Route path="/analytics" component={Analytics} />
+                <Route path="/seo" component={SEOReports} />
+                <Route path="/content" component={ContentCalendar} />
+                <Route path="/resources" component={Resources} />
+                <Route path="/payments" component={Payments} />
+                <Route path="/team" component={Team} />
+                <Route path="/support" component={Support} />
+                <Route path="/settings" component={Settings} />
+                <Route path="/admin" component={AdminDashboard} />
+                <Route path="/admin/client-detail" component={ClientDetailPage} />
+                <Route path="/admin/add-client" component={AddClientPage} />
+                <Route path="/admin/import-contacts" component={ImportContacts} />
+                <Route path="/admin/client-analytics" component={ClientAnalytics} />
+                <Route component={NotFound} />
+              </Switch>
+            </main>
+          </div>
+          
+          <MobileNav />
+        </div>
+      </Route>
+    </Switch>
   );
 }
 
